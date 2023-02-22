@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticProps, NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import { Auth as AuthPage } from '../components/auth';
+import { Auth as AuthPage } from '@/components/pages/auth';
 
 const Auth: NextPage = () => <AuthPage />;
 

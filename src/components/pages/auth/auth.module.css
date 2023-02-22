@@ -1,0 +1,25 @@
+.page{
+margin:60px;
+height: calc(100vh - 180px);
+position: absolute;
+top:0;
+right: 0;
+width: calc(100vw - 120px);
+background-color: none;
+z-index: 999;
+}
+.body{
+display: flex;
+flex-direction: column;
+align-items: center;
+gap:30%;
+height: 100%;
+}
+.center{
+max-width: 30%;
+min-width: 200px;
+}
+
+.center>*{
+margin-top: 24px;
+}
