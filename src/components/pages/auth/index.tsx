@@ -1,35 +1,38 @@
-import React from 'react'
-import {Button,Input,Space,Row,Col} from 'antd';
-import {BackwardOutlined} from '@ant-design/icons';
-import { Plate } from '../../common/plate';
-import {Logo} from '../../common/icons/logo'
-
-import styles from './auth.module.css'
-import { useRouter } from 'next/router';
+import React from 'react';
 import dynamic from 'next/dynamic';
-const Map = dynamic(() => import("@/components/pages/map"), { ssr:false })
-type Props = {}
+import { useRouter } from 'next/router';
 
-export const Auth = (props: Props) => {
-const router= useRouter()
+import { Button, Input } from 'antd';
 
-  return (<>
-  <Map layers=''/>
-<div className={styles.page}>
-       <Plate >
-        <div className={styles.body}>
-        <div className={styles.top}>
-          <Logo colorRevert/>
-          </div>
-         <div className={styles.center}>
-          <Input placeholder='логин' />
-          <Input placeholder='пароль' />
-         
-          <Button onClick={()=>router.push('/map')}  block={true}>войти</Button>
-         </div>
-        </div>
-          </Plate> 
-</div></>
+import { Logo } from '../../common/icons/logo';
+import { Plate } from '../../common/plate';
 
-  )
-}
+import styles from './auth.module.css';
+
+const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
+
+export const Auth = () => {
+    const router = useRouter();
+
+    return (
+        <React.Fragment>
+            <Map />
+            <div className={styles.page}>
+                <Plate>
+                    <div className={styles.body}>
+                        <div className={styles.top}>
+                            <Logo colorRevert={true} />
+                        </div>
+                        <div className={styles.center}>
+                            <Input placeholder='Логин / e-mail' />
+                            <Input placeholder='Пароль' />
+                            <Button type='primary' size='large' onClick={() => router.push('/map')}>
+                                Вход
+                            </Button>
+                        </div>
+                    </div>
+                </Plate>
+            </div>
+        </React.Fragment>
+    );
+};

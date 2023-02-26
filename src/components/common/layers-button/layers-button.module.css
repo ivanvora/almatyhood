@@ -1,0 +1,72 @@
+.layers{
+    transition: 0.2s ease-in 1s;
+    position: relative;
+    height: 75px;
+    width: 75px;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: contrast(80%) blur(5px) ;
+   
+}
+
+.body:hover .layers{
+    transition: 0.2s ease-in ;
+    position: relative;
+    height: 106px;
+    width: 106px;
+}
+
+.body{
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 2000;
+}
+
+.body:hover .menu{
+    transition: 0.2s ease-in ;
+    top:0;
+    opacity: 100;
+}
+
+.menu{
+    transition: 0.2s ease-in 1s;
+    position:absolute;
+    top:130px;
+    left: 126px;
+    z-index: 1998;
+    height: 94px;
+    width: auto;
+    border-radius: 12px;
+    opacity: 0;  
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: contrast(80%) blur(5px) ;
+    border:1px solid black;
+    padding: 5px;
+    display: flex;
+}
+
+.layer-button{
+    height: 65px;
+    width: 65px;
+    margin:5px;
+}
+
+.active{
+    filter: grayscale(0) !important;
+}
+
+.border{
+    background-image: url('../../../assets/border.svg');
+    background-position: center;
+    filter: grayscale(1);
+}
+.redlines{
+    background-image: url('../../../assets/redlines.svg');
+    background-position: center;
+    filter: grayscale(1);
+}
+.districts{
+    background-image: url('../../../assets/districts.svg');
+    background-position: center;
+    filter: grayscale(1);
+}
