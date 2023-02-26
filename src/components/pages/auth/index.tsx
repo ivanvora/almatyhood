@@ -26,7 +26,11 @@ export const Auth = () => {
                         <div className={styles.center}>
                             <Input placeholder='Логин / e-mail' />
                             <Input placeholder='Пароль' />
-                            <Button type='primary' size='large' onClick={() => router.push('/map')}>
+                            <Button
+                                type='primary'
+                                size='large'
+                                onClick={() => router.push('/main')}
+                            >
                                 Вход
                             </Button>
                         </div>
