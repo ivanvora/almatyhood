@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { LatLngExpression } from 'leaflet';
 import dynamic from 'next/dynamic';
-
-import { Button } from 'antd';
 
 import { LayersButton } from '@/components/common/layers-button';
 import { Top } from '@/components/common/top';
@@ -15,7 +12,6 @@ const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
 
 export const Main = () => {
     const [layers, setLayers] = useState<TLayer[]>();
-    const [markers, setMarkers] = useState<LatLngExpression[]>();
 
     const setLayer = (layer: TLayer) => {
         setLayers((state) => {
@@ -31,7 +27,7 @@ export const Main = () => {
 
     return (
         <React.Fragment>
-            <Map layers={layers} markers={markers} />
+            <Map layers={layers} />
             <div className={styles.main}>
                 <LayersButton
                     onBordersClick={() => setLayer('gis_boundary')}
