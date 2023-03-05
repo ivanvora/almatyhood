@@ -1,0 +1,58 @@
+
+.districts{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    min-height: calc(100vh - 178px);
+}
+
+.common-stats > *{
+    margin-bottom: 3vh;
+}
+
+.left-plate{
+    height: calc(50% - 58px);
+}
+
+.map{
+    height: 75vh;
+    position: absolute;
+    right: 10px;
+    top:10px;
+}
+
+.types{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 300px;
+    width: 100%;
+}
+
+.district-filter{
+    display: flex;
+}
+
+.district-filter_panel{
+    display: flex;
+    flex-direction: column;
+}
+.district-filter_panel>* {
+    margin-top: 10px;
+}
+.pic{
+    background: url('../../../assets/Rectangle\ 12.png');
+    width: 50%;
+    height: calc(100% - 58px);
+}
+.current{
+    display: flex;
+    height: calc(100% - 58px);
+}
+.current-stats{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 50%;
+    height: calc(100% - 58px);
+}

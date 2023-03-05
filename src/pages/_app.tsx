@@ -1,16 +1,22 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { appWithTranslation } from 'next-i18next';
 
 import { ConfigProvider } from 'antd';
 
-import { theme } from '@/modules/configs/ant';
+import { purpletheme, theme } from '@/modules/configs/ant';
+
+import '../styles/global.css';
 // антовские локали работают в связке с локалями dayjs
 // по другому в календаре пропадают имена месяцов
 function MyApp({ Component, pageProps }: AppProps) {
+    const router = useRouter();
+    const isPusrple = router.route === '/metrics';
+
     return (
-        <ConfigProvider theme={theme}>
+        <ConfigProvider theme={isPusrple ? purpletheme : theme}>
             <Head>
                 <title>AlmatyHood</title>
                 <link

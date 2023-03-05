@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 
+import { Button, Input, Select } from 'antd';
+
+import { Bookmark } from '@/components/common/icons/bookmark';
+import { Clock } from '@/components/common/icons/clock';
 import { LayersButton } from '@/components/common/layers-button';
 import { Top } from '@/components/common/top';
 // import Map from '@/components/common/map';
@@ -25,6 +29,29 @@ export const Main = () => {
         });
     };
 
+    const contentTop = (
+        <React.Fragment>
+            <div className={styles['search-block']}>
+                <Button className={styles.bookmark}>
+                    <Bookmark />
+                </Button>
+                <Button className={styles.clock}>
+                    <Clock />
+                </Button>
+                <Input
+                    style={{ width: '300px', height: '30px' }}
+                    type='primary'
+                    placeholder='Текст...'
+                />
+            </div>
+            <div className={styles['select-block']}>
+                <Select placeholder='Район' />
+                <Select placeholder='Улица' />
+                <Select placeholder='Дом' />
+            </div>
+        </React.Fragment>
+    );
+
     return (
         <React.Fragment>
             <Map layers={layers} />
@@ -34,7 +61,7 @@ export const Main = () => {
                     onDistrictsClick={() => setLayer('gis_districts')}
                     onRedlinesClick={() => setLayer('gis_red_lines')}
                 />
-                <Top />
+                <Top>{contentTop}</Top>
             </div>
         </React.Fragment>
     );

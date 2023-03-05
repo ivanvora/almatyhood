@@ -1,0 +1,14 @@
+.district{
+    transition: 0.2s ease-in;
+    fill:#BCBCBC;
+}
+
+.district:hover{
+    transition: 0.2s ease-in;
+    filter: brightness(80%);
+}
+
+.selected{
+    transition: 0.2s ease-in;
+    fill:#7432FF;
+}

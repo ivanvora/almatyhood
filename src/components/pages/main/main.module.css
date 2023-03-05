@@ -4,3 +4,26 @@
     top:0;
     left: 0;
 }
+
+.clock{
+    padding: 5px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+.bookmark{
+    padding: 8px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+.search-block{
+    display: flex;
+}
+
+.search-block >*{
+    margin-right: 10px;
+}
+.select-block >*{
+    margin-right: 10px;
+}

@@ -28,7 +28,7 @@ export const LayersButton = ({
                 <LayersIcon color='black' />
             </Button>
             <div className={styles.menu}>
-                <Legend title='Границы'>
+                <Legend title='Границы' style={{ textAlign: 'center' }} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsBorders((s) => !s);
@@ -39,7 +39,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend title='Районы'>
+                <Legend title='Районы' style={{ textAlign: 'center' }} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsDistricts((s) => !s);
@@ -50,7 +50,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend title='Красные линии'>
+                <Legend title='Красные линии' style={{ textAlign: 'center' }} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsRedlines((s) => !s);
