@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Col, Input, Progress, Row, Select, Slider, Typography } from 'antd';
-import { SliderMarks } from 'antd/es/slider';
 
 import { ContentWrapper } from '../content-wrapper';
 import { MapScheme } from '../icons/map-scheme';
@@ -11,7 +10,6 @@ import { Top } from '../top';
 
 import styles from './district-stat-modal.module.css';
 
-type Props = {};
 const StatRow = ({ data, title }: { data: string; title: string }) => (
     <Legend bigTitle={true} title={title}>
         <Typography.Title style={{ marginTop: '10px' }} level={2}>
@@ -41,7 +39,7 @@ const StatProgress = ({ progress, value, title }: TStatProgressProps) => {
     );
 };
 
-export const DistrictStat = (props: Props) => (
+export const DistrictStat = () => (
     <ContentWrapper>
         <Top />
         <Row>
