@@ -51,10 +51,10 @@ const Map = ({ markers, layers }: Props) => {
     };
 
     useEffect(() => {
-        // axios
-        //     .get(GEOSERVER, { params: REQUEST_PARAMS })
-        //     .then(({ data }) => setBuildings({ data }))
-        //     .catch((error) => Promise.reject(error));
+        axios
+            .get(GEOSERVER, { params: REQUEST_PARAMS })
+            .then(({ data }) => setBuildings({ data }))
+            .catch((error) => Promise.reject(error));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
