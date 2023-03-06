@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
+    FeatureGroup,
     GeoJSON,
     MapContainer,
     Marker,
@@ -51,10 +52,10 @@ const Map = ({ markers, layers }: Props) => {
     };
 
     useEffect(() => {
-        axios
-            .get(GEOSERVER, { params: REQUEST_PARAMS })
-            .then(({ data }) => setBuildings({ data }))
-            .catch((error) => Promise.reject(error));
+        // axios
+        //     .get(GEOSERVER, { params: REQUEST_PARAMS })
+        //     .then(({ data }) => setBuildings({ data }))
+        //     .catch((error) => Promise.reject(error));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -85,11 +86,13 @@ const Map = ({ markers, layers }: Props) => {
                 <WMSTileLayer
                     className={styles[item]}
                     key={item}
+                    tms={true}
                     params={{ layers: item }}
-                    url={envs.GEO_SERVER_WMS}
+                    url={GEOSERVER}
                     {...WMSProps}
                 />
             ))}
+            <WMSTileLayer params={{ layers: 'ne:gis_buildings' }} url={GEOSERVER} {...WMSProps} />
             {buildings ? <GeoJSON data={buildings} /> : null}
             <Marker position={position}>
                 <Popup>
