@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
-    FeatureGroup,
     GeoJSON,
     MapContainer,
     Marker,
@@ -12,7 +11,7 @@ import {
     ZoomControl,
 } from 'react-leaflet';
 import axios from 'axios';
-import { LatLngExpression } from 'leaflet';
+import { LatLngExpression, Layer } from 'leaflet';
 
 import { envs } from '@/modules/configs/app';
 import { TLayer } from '@/modules/models/map';
@@ -36,6 +35,14 @@ function MyComponent() {
 
     return null;
 }
+
+const geoJSONStyle = () => ({
+    color: '#7432FF',
+    weight: 1,
+    fillOpacity: 0.5,
+    fillColor: '#7432FF',
+});
+
 const Map = ({ markers, layers }: Props) => {
     const position: LatLngExpression = [43.25667, 76.92861];
     const [buildings, setBuildings] = useState<any>();
@@ -44,7 +51,7 @@ const Map = ({ markers, layers }: Props) => {
 
     const REQUEST_PARAMS = {
         outputFormat: 'application/json',
-        maxFeatures: 50,
+        maxFeatures: 50000,
         request: 'GetFeature',
         service: 'WFS',
         typeName: 'ne:gis_buildings',
@@ -52,10 +59,10 @@ const Map = ({ markers, layers }: Props) => {
     };
 
     useEffect(() => {
-        // axios
-        //     .get(GEOSERVER, { params: REQUEST_PARAMS })
-        //     .then(({ data }) => setBuildings({ data }))
-        //     .catch((error) => Promise.reject(error));
+        axios
+            .get(GEOSERVER, { params: REQUEST_PARAMS })
+            .then(({ data }) => setBuildings({ ...data }))
+            .catch((error) => Promise.reject(error));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -67,6 +74,18 @@ const Map = ({ markers, layers }: Props) => {
         tiles: true,
         uppercase: true,
         foo: [123, 5566],
+    };
+
+    const renderTooltip = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>) => {
+        console.log(feature.properties);
+
+        return feature.properties.display_name;
+    };
+    const onEachFeature = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>, layer: Layer) => {
+        const tooltipChildren = renderTooltip(feature);
+        const popupContent = `<Popup> ${tooltipChildren} </Popup>`;
+
+        layer.bindPopup(popupContent);
     };
 
     const map = (
@@ -92,8 +111,9 @@ const Map = ({ markers, layers }: Props) => {
                     {...WMSProps}
                 />
             ))}
-            <WMSTileLayer params={{ layers: 'ne:gis_buildings' }} url={GEOSERVER} {...WMSProps} />
-            {buildings ? <GeoJSON data={buildings} /> : null}
+            {buildings ? (
+                <GeoJSON onEachFeature={onEachFeature} style={geoJSONStyle} data={buildings} />
+            ) : null}
             <Marker position={position}>
                 <Popup>
                     A pretty CSS3 popup.
