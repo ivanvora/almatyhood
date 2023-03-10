@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 import { Button, Input, Select } from 'antd';
 
@@ -16,6 +17,7 @@ const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
 
 export const Main = () => {
     const [layers, setLayers] = useState<TLayer[]>();
+    const router = useRouter();
 
     const setLayer = (layer: TLayer) => {
         setLayers((state) => {
@@ -49,6 +51,9 @@ export const Main = () => {
                 <Select placeholder='Улица' />
                 <Select placeholder='Дом' />
             </div>
+            <Button style={{ marginRight: '50px' }} onClick={() => router.push('/metrics')}>
+                Метрики
+            </Button>
         </React.Fragment>
     );
 

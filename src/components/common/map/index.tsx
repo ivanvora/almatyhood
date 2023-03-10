@@ -14,7 +14,7 @@ import axios from 'axios';
 import { LatLngExpression, Layer } from 'leaflet';
 
 import { envs } from '@/modules/configs/app';
-import { TLayer } from '@/modules/models/map';
+import { TBuildinFeature, TLayer } from '@/modules/models/map';
 
 import styles from './map.module.css';
 
@@ -76,14 +76,8 @@ const Map = ({ markers, layers }: Props) => {
         foo: [123, 5566],
     };
 
-    const renderTooltip = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>) => {
-        console.log(feature.properties);
-
-        return feature.properties.display_name;
-    };
     const onEachFeature = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>, layer: Layer) => {
-        const tooltipChildren = renderTooltip(feature);
-        const popupContent = `<Popup> ${tooltipChildren} </Popup>`;
+        const popupContent = `<Popup> ${feature.properties.display_name} </Popup>`;
 
         layer.bindPopup(popupContent);
     };
@@ -114,13 +108,13 @@ const Map = ({ markers, layers }: Props) => {
             {buildings ? (
                 <GeoJSON onEachFeature={onEachFeature} style={geoJSONStyle} data={buildings} />
             ) : null}
-            <Marker position={position}>
+            {/* <Marker position={position}>
                 <Popup>
                     A pretty CSS3 popup.
                     <br />
                     Easily customizable.
                 </Popup>
-            </Marker>
+            </Marker> */}
             {markers?.map((item) => (
                 <Marker position={item}>{item.toString()}</Marker>
             ))}

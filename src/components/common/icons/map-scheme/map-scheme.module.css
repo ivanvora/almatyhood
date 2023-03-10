@@ -6,6 +6,7 @@
 .district:hover{
     transition: 0.2s ease-in;
     filter: brightness(80%);
+    cursor: pointer;
 }
 
 .selected{
