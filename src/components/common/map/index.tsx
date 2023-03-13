@@ -1,67 +1,96 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import {
-    GeoJSON,
-    MapContainer,
-    Marker,
-    Popup,
-    TileLayer,
-    useMapEvents,
-    WMSTileLayer,
-    ZoomControl,
-} from 'react-leaflet';
-import axios from 'axios';
-import { LatLngExpression, Layer } from 'leaflet';
+import { GeoJSON, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import { LatLngExpression, Layer, Polyline, StyleFunction } from 'leaflet';
 
+import { client } from '@/modules/api';
 import { envs } from '@/modules/configs/app';
-import { TBuildinFeature, TLayer } from '@/modules/models/map';
+import { TLayer } from '@/modules/models/map';
 
 import styles from './map.module.css';
 
 type Props = {
-    markers?: LatLngExpression[];
     layers?: TLayer[];
 };
-
-function MyComponent() {
-    const map = useMapEvents({
-        click: () => {
-            map.locate();
-        },
-        locationfound: (location) => {
-            console.log('location found:', location);
-        },
-    });
-
-    return null;
-}
 
 const geoJSONStyle = () => ({
     color: '#7432FF',
     weight: 1,
     fillOpacity: 0.5,
     fillColor: '#7432FF',
+    zIndex: 999,
 });
 
-const Map = ({ markers, layers }: Props) => {
+const geoJSONRedLinesStyle: StyleFunction<any> = () => ({
+    color: '#7432FF',
+    weight: 10,
+    fillOpacity: 0.5,
+    fillColor: 'red',
+    fill: true,
+    zIndex: 902,
+});
+
+const geoJSONboundaryStyle: StyleFunction<any> = () => ({
+    color: 'darkgrey',
+    weight: 4,
+    fillOpacity: 0,
+    zIndex: 901,
+});
+
+const geoJSONDistrictsStyle: StyleFunction<any> = (f) => {
+    const districtsColors = {
+        'gis_districts.1': 'yellow',
+        'gis_districts.2': 'blue',
+        'gis_districts.3': 'cadetblue',
+        'gis_districts.4': 'cyan',
+        'gis_districts.5': 'aquamarine',
+        'gis_districts.6': 'coral',
+        'gis_districts.7': 'gold',
+        'gis_districts.8': '#32ff58',
+    };
+
+    return {
+        color: f ? districtsColors[f.id as keyof typeof districtsColors] : 'grey',
+        weight: 1,
+        fillOpacity: 0.5,
+        fillColor: f ? districtsColors[f.id as keyof typeof districtsColors] : 'grey',
+        zIndex: 900,
+    };
+};
+
+const GJstyles = {
+    gis_red_lines: geoJSONRedLinesStyle,
+    gis_districts: geoJSONDistrictsStyle,
+    gis_boundary: geoJSONboundaryStyle,
+};
+
+const Map = ({ layers }: Props) => {
     const position: LatLngExpression = [43.25667, 76.92861];
     const [buildings, setBuildings] = useState<any>();
 
-    const GEOSERVER = 'http://20.92.225.31:8080/geoserver/ne/ows';
-
-    const REQUEST_PARAMS = {
-        outputFormat: 'application/json',
-        maxFeatures: 50000,
-        request: 'GetFeature',
-        service: 'WFS',
-        typeName: 'ne:gis_buildings',
-        version: '1.0.0',
-    };
+    const [backwardLayers, setBackWardLayers] = useState<{ [key in TLayer]: any }>({
+        gis_boundary: null,
+        gis_buildings: null,
+        gis_districts: null,
+        gis_red_lines: null,
+    });
 
     useEffect(() => {
-        axios
-            .get(GEOSERVER, { params: REQUEST_PARAMS })
+        client.map
+            .getBuildings()
             .then(({ data }) => setBuildings({ ...data }))
+            .catch((error) => Promise.reject(error));
+        client.map
+            .getBackwardLayers('gis_districts')
+            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_districts: data })))
+            .catch((error) => Promise.reject(error));
+        client.map
+            .getBackwardLayers('gis_boundary')
+            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_boundary: data })))
+            .catch((error) => Promise.reject(error));
+        client.map
+            .getBackwardLayers('gis_red_lines')
+            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_red_lines: data })))
             .catch((error) => Promise.reject(error));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -82,6 +111,30 @@ const Map = ({ markers, layers }: Props) => {
         layer.bindPopup(popupContent);
     };
 
+    const drawBackwardLayers = () =>
+        layers?.map((item) => {
+            if (backwardLayers) {
+                return (
+                    <GeoJSON
+                        onEachFeature={(feature, layer) => {
+                            // if (layer instanceof Polyline) {
+                            //     layer.setStyle({
+                            //         color: 'red',
+                            //         weight: 5,
+                            //     });
+                            // }
+                        }}
+                        key={item}
+                        interactive={false}
+                        style={GJstyles[item as keyof typeof GJstyles]}
+                        data={backwardLayers[item]}
+                    />
+                );
+            }
+
+            return null;
+        });
+
     const map = (
         <MapContainer
             className={styles.map}
@@ -93,32 +146,11 @@ const Map = ({ markers, layers }: Props) => {
             doubleClickZoom={false}
             zoomControl={false}
         >
-            {/* <TileLayer url='http://20.92.225.31:8080/geoserver/gwc/service/tms/1.0.0{gis_red_lines}@png/{z}/{x}/{y}.png' /> */}
-            <TileLayer url={envs.WORLD_MAP} />
-            {layers?.map((item) => (
-                <WMSTileLayer
-                    className={styles[item]}
-                    key={item}
-                    tms={true}
-                    params={{ layers: item }}
-                    url={GEOSERVER}
-                    {...WMSProps}
-                />
-            ))}
+            <TileLayer url={envs.API.WORLD_MAP} />
+            {drawBackwardLayers()}
             {buildings ? (
                 <GeoJSON onEachFeature={onEachFeature} style={geoJSONStyle} data={buildings} />
             ) : null}
-            {/* <Marker position={position}>
-                <Popup>
-                    A pretty CSS3 popup.
-                    <br />
-                    Easily customizable.
-                </Popup>
-            </Marker> */}
-            {markers?.map((item) => (
-                <Marker position={item}>{item.toString()}</Marker>
-            ))}
-            <MyComponent />
             <ZoomControl position='bottomright' />
         </MapContainer>
     );
