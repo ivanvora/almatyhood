@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import { DISTRICTS } from '@/modules/dictionary';
+
 import styles from './map-scheme.module.css';
 
 export type TProps = {
@@ -9,17 +11,6 @@ export type TProps = {
     onSelect?: (districts: string[]) => void;
     selectMany?: boolean;
 };
-const DISTRICTS = {
-    medeu: 'medeu',
-    bostandyk: 'bostandyk',
-    alatau: 'alatau',
-    turksib: 'turksib',
-    nauryzbay: 'nauryzbay',
-    zhetysu: 'zhetysu',
-    almaly: 'almaly',
-    auezov: 'auezov',
-};
-
 export const MapScheme = ({ onClick, onSelect, selectMany = false, style, className }: TProps) => {
     const [selected, setSelected] = useState<string[]>([]);
 

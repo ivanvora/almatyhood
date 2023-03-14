@@ -3,7 +3,7 @@ import { AxiosInstance, AxiosResponse } from 'axios';
 import { TLayer } from '@/modules/models/map';
 import { promisify } from '@/modules/utils';
 
-import { AClientFacade } from '../client-facade';
+import { AClientFacade } from '../abstract/client-facade';
 import { endpoints } from '../endpoints';
 
 import { buildings, districts } from './mocks';
@@ -15,10 +15,10 @@ export class Map extends AClientFacade {
 
     DEFAULT_PARAMS = {
         outputFormat: 'application/json',
-        maxFeatures: 500000,
+        maxFeatures: 50000,
         request: 'GetFeature',
         service: 'WFS',
-        version: '1.0.0',
+        version: '2.0.0',
     };
 
     getBuildings() {

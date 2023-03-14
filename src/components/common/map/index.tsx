@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { GeoJSON, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import { GeoJSON, MapContainer, TileLayer, WMSTileLayer, ZoomControl } from 'react-leaflet';
 import { LatLngExpression, Layer, Polyline, StyleFunction } from 'leaflet';
 
 import { client } from '@/modules/api';
@@ -40,7 +40,7 @@ const geoJSONboundaryStyle: StyleFunction<any> = () => ({
 const geoJSONDistrictsStyle: StyleFunction<any> = (f) => {
     const districtsColors = {
         'gis_districts.1': 'yellow',
-        'gis_districts.2': 'blue',
+        'gis_districts.2': 'green',
         'gis_districts.3': 'cadetblue',
         'gis_districts.4': 'cyan',
         'gis_districts.5': 'aquamarine',
@@ -51,8 +51,8 @@ const geoJSONDistrictsStyle: StyleFunction<any> = (f) => {
 
     return {
         color: f ? districtsColors[f.id as keyof typeof districtsColors] : 'grey',
-        weight: 1,
-        fillOpacity: 0.5,
+        weight: 2,
+        fillOpacity: 0.2,
         fillColor: f ? districtsColors[f.id as keyof typeof districtsColors] : 'grey',
         zIndex: 900,
     };
@@ -134,7 +134,7 @@ const Map = ({ layers }: Props) => {
 
             return null;
         });
-
+    const isRedLines = layers?.includes('gis_red_lines');
     const map = (
         <MapContainer
             className={styles.map}
@@ -146,6 +146,14 @@ const Map = ({ layers }: Props) => {
             doubleClickZoom={false}
             zoomControl={false}
         >
+            {isRedLines && (
+                <WMSTileLayer
+                    tms={true}
+                    params={{ layers: 'gis_red_lines' }}
+                    url={envs.API.GEO_SERVER_WMS}
+                    {...WMSProps}
+                />
+            )}
             <TileLayer url={envs.API.WORLD_MAP} />
             {drawBackwardLayers()}
             {buildings ? (
