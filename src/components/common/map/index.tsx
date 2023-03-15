@@ -148,9 +148,8 @@ const Map = ({ layers }: Props) => {
         >
             {isRedLines && (
                 <WMSTileLayer
-                    tms={true}
                     params={{ layers: 'gis_red_lines' }}
-                    url={envs.API.GEO_SERVER_WMS}
+                    url={envs.API.GEO_SERVER_OWS}
                     {...WMSProps}
                 />
             )}
