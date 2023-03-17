@@ -10,7 +10,8 @@ export const endpoints = {
     },
     common: {
         filterBuildings: `${commonHost}/GetBuildingsSorted`,
-        getCommonInfo: `${commonHost}/GisBuilding`,
+        getBuildings: `${commonHost}/GisBuilding`,
+        getDistricts: `${commonHost}/GisGisDistricts`,
         getBuildingById: (id: number) => `${commonHost}/GisBuildingById?Id=${id}`,
     },
 };

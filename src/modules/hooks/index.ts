@@ -56,7 +56,7 @@ export const useGetCommonInfo = (filter: TFilterBuildingQuery) => {
 
         if (F) {
             client.common
-                .getCommonInfo(F, controller.signal)
+                .getBuildingsInfo(F, controller.signal)
                 .then(({ data }) => {
                     setData(data);
                     setIsLoading(false);

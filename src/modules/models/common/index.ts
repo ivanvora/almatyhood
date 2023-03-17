@@ -33,3 +33,8 @@ export type TResponse = {
     totalArea?: number;
     countOfFlat?: number;
 };
+
+export type TDistrict = {
+    id: number;
+    disctrictName: string;
+};

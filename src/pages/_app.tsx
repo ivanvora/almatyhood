@@ -13,10 +13,10 @@ import '../styles/global.css';
 // по другому в календаре пропадают имена месяцов
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
-    const isPusrple = router.route === '/metrics';
+    const isBlack = router.route === '/';
 
     return (
-        <ConfigProvider theme={isPusrple ? purpletheme : theme}>
+        <ConfigProvider theme={isBlack ? theme : purpletheme}>
             <Head>
                 <title>AlmatyHood</title>
                 <link
