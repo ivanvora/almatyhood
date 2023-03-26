@@ -5,7 +5,6 @@
     width: 75px;
     background-color: rgba(255, 255, 255, 0.4);
     /* backdrop-filter: contrast(80%) blur(5px) ; */
-   
 }
 
 .body:hover .layers{
@@ -69,4 +68,28 @@
     background-image: url('../../../assets/districts.svg');
     background-position: center;
     filter: grayscale(1);
+}
+.rivers{
+    background-image: url('../../../assets/redlines.svg');
+    background-position: center;
+    filter: grayscale(1);
+}
+.seismo{
+    background-image: url('../../../assets/districts.svg');
+    background-position: center;
+    filter: grayscale(1);
+}
+.lakes{
+    background-image: url('../../../assets/border.svg');
+    background-position: center;
+    filter: grayscale(1);
+}
+.rivers.active{
+    filter: hue-rotate(230deg) !important;
+}
+.seismo.active{
+    filter: hue-rotate(40deg) !important;
+}
+.lakes.active{
+    filter: hue-rotate(90deg) !important;
 }

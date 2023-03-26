@@ -1,6 +1,6 @@
 import { GenericAbortSignal } from 'axios';
 
-import { TDistrict, TFilterBuildingQuery, TResponse } from '@/modules/models/common';
+import { TDistrict, TFilterBuildingQuery, TResponse, TStreet } from '@/modules/models/common';
 
 import { AClientFacade } from '../abstract/client-facade';
 import { endpoints } from '../endpoints';
@@ -19,6 +19,10 @@ export class Common extends AClientFacade {
 
     getBuildingById(id: number) {
         return this.instance.get(endpoints.common.getBuildingById(id));
+    }
+
+    getStreets(id: number) {
+        return this.instance.get<TStreet[]>(endpoints.common.getStreets, { params: { id } });
     }
 
     getDistricts() {

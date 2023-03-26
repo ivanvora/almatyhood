@@ -138,11 +138,11 @@ export const DistrictStat = () => {
                 <div className={styles.stats}>
                     {districtName && (
                         <Plate className={styles['right-plate']}>
-                            <Typography.Title style={{ margin: '0' }}>
+                            <Typography.Title style={{ margin: '0', fontSize: '1.5rem' }}>
                                 {districtName}
                             </Typography.Title>
                             <div className={styles['district-filter']}>
-                                <Plate>
+                                <Plate style={{ padding: '1rem' }}>
                                     <div className={styles['district-filter_panel']}>
                                         <Legend bigTitle={true} title='Период постройки'>
                                             <div

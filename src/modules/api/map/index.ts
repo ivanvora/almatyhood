@@ -15,7 +15,7 @@ export class Map extends AClientFacade {
 
     DEFAULT_PARAMS = {
         outputFormat: 'application/json',
-        maxFeatures: 50000,
+        maxFeatures: 500000,
         request: 'GetFeature',
         service: 'WFS',
         version: '2.0.0',

@@ -9,11 +9,11 @@
     font-size: small;
     color:black;
     font-family: 'Montserrat','Roboto', sans-serif;
-    font-size: 10px;
+    font-size: 0.7rem;
     font-weight: 500;
     line-height: 10px;
     letter-spacing: 0em;
 }
 .big-title{
-    font-size: 16px;
+    font-size: 1rem;
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { GeoJSON, MapContainer, TileLayer, WMSTileLayer, ZoomControl } from 'react-leaflet';
 import { LatLngExpression, Layer, Polyline, StyleFunction } from 'leaflet';
 
@@ -7,73 +7,68 @@ import { client } from '@/modules/api';
 import { envs } from '@/modules/configs/app';
 import { TLayer } from '@/modules/models/map';
 
+import {
+    boundaryStyle,
+    defaultStyle,
+    districtsStyle,
+    lakesStyle,
+    redLinesStyle,
+    riversStyle,
+} from './geojson-styles';
+
 import styles from './map.module.css';
 
 type Props = {
     layers?: TLayer[];
-};
-
-const geoJSONStyle = () => ({
-    color: '#7432FF',
-    weight: 1,
-    fillOpacity: 0.5,
-    fillColor: '#7432FF',
-    zIndex: 999,
-});
-
-const geoJSONRedLinesStyle: StyleFunction<any> = () => ({
-    color: '#7432FF',
-    weight: 10,
-    fillOpacity: 0.5,
-    fillColor: 'red',
-    fill: true,
-    zIndex: 902,
-});
-
-const geoJSONboundaryStyle: StyleFunction<any> = () => ({
-    color: 'darkgrey',
-    weight: 4,
-    fillOpacity: 0,
-    zIndex: 901,
-});
-
-const geoJSONDistrictsStyle: StyleFunction<any> = (f) => {
-    const districtsColors = {
-        'gis_districts.1': 'yellow',
-        'gis_districts.2': 'green',
-        'gis_districts.3': 'cadetblue',
-        'gis_districts.4': 'cyan',
-        'gis_districts.5': 'aquamarine',
-        'gis_districts.6': 'coral',
-        'gis_districts.7': 'gold',
-        'gis_districts.8': '#32ff58',
-    };
-
-    return {
-        color: f ? districtsColors[f.id as keyof typeof districtsColors] : 'grey',
-        weight: 2,
-        fillOpacity: 0.2,
-        fillColor: f ? districtsColors[f.id as keyof typeof districtsColors] : 'grey',
-        zIndex: 900,
-    };
+    featureId?: number | string;
 };
 
 const GJstyles = {
-    gis_red_lines: geoJSONRedLinesStyle,
-    gis_districts: geoJSONDistrictsStyle,
-    gis_boundary: geoJSONboundaryStyle,
+    gis_red_lines: redLinesStyle,
+    gis_rivers: riversStyle,
+    gis_lakes: lakesStyle,
+    gis_seism: riversStyle,
+    gis_districts: districtsStyle,
+    gis_boundary: boundaryStyle,
 };
 
-const Map = ({ layers }: Props) => {
+const Map = ({ layers, featureId }: Props) => {
     const position: LatLngExpression = [43.25667, 76.92861];
+
+    const [zoom, setZoom] = useState(11);
     const [buildings, setBuildings] = useState<any>();
+    const [mapRef, setMapRef] = useState<any>();
+
+    const [center, setCenter] = useState<LatLngExpression>(position);
 
     const [backwardLayers, setBackWardLayers] = useState<{ [key in TLayer]: any }>({
         gis_boundary: null,
         gis_buildings: null,
         gis_districts: null,
         gis_red_lines: null,
+        gis_rivers: null,
+        gis_lakes: null,
+        gis_seism: null,
     });
+
+    useEffect(() => {
+        if (buildings) {
+            const feature = buildings.features.find(
+                (item: any) => item.properties.fid === featureId,
+            );
+
+            if (feature) {
+                const newCenter = feature.geometry.coordinates[0][0][0].reverse();
+
+                setZoom(15);
+                setCenter(newCenter);
+                if (mapRef) {
+                    mapRef.setView(newCenter, 17);
+                }
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [featureId]);
 
     useEffect(() => {
         client.map
@@ -92,6 +87,18 @@ const Map = ({ layers }: Props) => {
             .getBackwardLayers('gis_red_lines')
             .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_red_lines: data })))
             .catch((error) => Promise.reject(error));
+        client.map
+            .getBackwardLayers('gis_rivers')
+            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_rivers: data })))
+            .catch((error) => Promise.reject(error));
+        client.map
+            .getBackwardLayers('gis_lakes')
+            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_lakes: data })))
+            .catch((error) => Promise.reject(error));
+        client.map
+            .getBackwardLayers('gis_seism')
+            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_seism: data })))
+            .catch((error) => Promise.reject(error));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -106,7 +113,7 @@ const Map = ({ layers }: Props) => {
     };
 
     const onEachFeature = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>, layer: Layer) => {
-        const popupContent = `<Popup> ${feature.properties.display_name} </Popup>`;
+        const popupContent = `<Popup><div id='building_popup'> ${feature.properties.display_name}</div> </Popup>`;
 
         layer.bindPopup(popupContent);
     };
@@ -114,6 +121,8 @@ const Map = ({ layers }: Props) => {
     const drawBackwardLayers = () =>
         layers?.map((item) => {
             if (backwardLayers) {
+                console.log(`backwardLayers.${item}`, backwardLayers[item]);
+
                 return (
                     <GeoJSON
                         onEachFeature={(feature, layer) => {
@@ -135,16 +144,18 @@ const Map = ({ layers }: Props) => {
             return null;
         });
     const isRedLines = layers?.includes('gis_red_lines');
+
     const map = (
         <MapContainer
             className={styles.map}
             attributionControl={false}
-            center={position}
-            zoom={12}
+            center={center}
+            zoom={zoom}
             scrollWheelZoom={true}
             boxZoom={false}
             doubleClickZoom={false}
             zoomControl={false}
+            ref={setMapRef}
         >
             {isRedLines && (
                 <WMSTileLayer
@@ -156,7 +167,7 @@ const Map = ({ layers }: Props) => {
             <TileLayer url={envs.API.WORLD_MAP} />
             {drawBackwardLayers()}
             {buildings ? (
-                <GeoJSON onEachFeature={onEachFeature} style={geoJSONStyle} data={buildings} />
+                <GeoJSON onEachFeature={onEachFeature} style={defaultStyle} data={buildings} />
             ) : null}
             <ZoomControl position='bottomright' />
         </MapContainer>

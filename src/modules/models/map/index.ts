@@ -1,4 +1,11 @@
-export type TLayer = 'gis_boundary' | 'gis_districts' | 'gis_red_lines' | 'gis_buildings';
+export type TLayer =
+    | 'gis_boundary'
+    | 'gis_districts'
+    | 'gis_red_lines'
+    | 'gis_buildings'
+    | 'gis_rivers'
+    | 'gis_seism'
+    | 'gis_lakes';
 
 export type TBuildinFeature = {
     type: string;

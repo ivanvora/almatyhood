@@ -38,3 +38,10 @@ export type TDistrict = {
     id: number;
     disctrictName: string;
 };
+
+export type TStreet = {
+    id: number;
+    street_name: string;
+    district_fid: number;
+    district_name: string;
+};
