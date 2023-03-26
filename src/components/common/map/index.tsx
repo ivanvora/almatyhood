@@ -14,6 +14,7 @@ import {
     lakesStyle,
     redLinesStyle,
     riversStyle,
+    seismoStyle,
 } from './geojson-styles';
 
 import styles from './map.module.css';
@@ -27,7 +28,7 @@ const GJstyles = {
     gis_red_lines: redLinesStyle,
     gis_rivers: riversStyle,
     gis_lakes: lakesStyle,
-    gis_seism: riversStyle,
+    gis_seism: seismoStyle,
     gis_districts: districtsStyle,
     gis_boundary: boundaryStyle,
 };
