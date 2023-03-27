@@ -93,21 +93,35 @@ export const Main = () => {
                 <Select
                     style={{ width: '7rem' }}
                     options={createDistrictsOptions()}
-                    onSelect={(e) => setFilter((s) => ({ ...s, districtId: e }))}
+                    onSelect={(e) => {
+                        setFilter((s) => ({
+                            ...s,
+                            districtId: e,
+                            street: undefined,
+                        }));
+                        setSelectedBuilding(undefined);
+                    }}
                     placeholder='Район'
                 />
                 <Select
+                    disabled={!filter?.districtId}
                     showSearch={true}
+                    value={filter?.street}
                     placeholder='Улица'
                     style={{ width: '15rem' }}
-                    onSelect={(e) => setFilter((s) => ({ ...s, street: e }))}
+                    onSelect={(e) => {
+                        setFilter((s) => ({ ...s, street: e }));
+                        setSelectedBuilding(undefined);
+                    }}
                     options={createStreetsOptions()}
                     filterOption={(input, option) =>
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                     }
                 />
                 <Select
+                    disabled={!filter?.districtId}
                     showSearch={true}
+                    value={selectedBuilding}
                     filterOption={(input, option) =>
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                     }

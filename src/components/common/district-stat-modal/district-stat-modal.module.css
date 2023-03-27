@@ -20,7 +20,13 @@
     position: absolute;
     right: 10px;
     top: 10px;
-  
+}
+
+@media only screen and (max-width: 1400px) {
+    .map{
+        height: 80%;
+   
+    }
 }
 
 .types{
