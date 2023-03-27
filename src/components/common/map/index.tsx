@@ -22,6 +22,7 @@ import styles from './map.module.css';
 type Props = {
     layers?: TLayer[];
     featureId?: number | string;
+    preload?: boolean;
 };
 
 const GJstyles = {
@@ -33,7 +34,7 @@ const GJstyles = {
     gis_boundary: boundaryStyle,
 };
 
-const Map = ({ layers, featureId }: Props) => {
+const Map = ({ layers, featureId, preload = true }: Props) => {
     const position: LatLngExpression = [43.25667, 76.92861];
 
     const [zoom, setZoom] = useState(11);
@@ -72,34 +73,36 @@ const Map = ({ layers, featureId }: Props) => {
     }, [featureId]);
 
     useEffect(() => {
-        client.map
-            .getBuildings()
-            .then(({ data }) => setBuildings({ ...data }))
-            .catch((error) => Promise.reject(error));
-        client.map
-            .getBackwardLayers('gis_districts')
-            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_districts: data })))
-            .catch((error) => Promise.reject(error));
-        client.map
-            .getBackwardLayers('gis_boundary')
-            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_boundary: data })))
-            .catch((error) => Promise.reject(error));
-        client.map
-            .getBackwardLayers('gis_red_lines')
-            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_red_lines: data })))
-            .catch((error) => Promise.reject(error));
-        client.map
-            .getBackwardLayers('gis_rivers')
-            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_rivers: data })))
-            .catch((error) => Promise.reject(error));
-        client.map
-            .getBackwardLayers('gis_lakes')
-            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_lakes: data })))
-            .catch((error) => Promise.reject(error));
-        client.map
-            .getBackwardLayers('gis_seism')
-            .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_seism: data })))
-            .catch((error) => Promise.reject(error));
+        if (preload) {
+            client.map
+                .getBuildings()
+                .then(({ data }) => setBuildings({ ...data }))
+                .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_districts')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_districts: data })))
+                .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_boundary')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_boundary: data })))
+                .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_red_lines')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_red_lines: data })))
+                .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_rivers')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_rivers: data })))
+                .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_lakes')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_lakes: data })))
+                .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_seism')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_seism: data })))
+                .catch((error) => Promise.reject(error));
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

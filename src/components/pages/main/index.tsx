@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { BarChartOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
@@ -46,13 +47,13 @@ export const Main = () => {
                 .then((res) => setStreets(res.data))
                 .catch((err) => console.log(err));
         }
-    }, [filter?.districtId]);
+    }, [filter]);
 
     const createDistrictsOptions = () =>
         districts?.map((item) => ({ value: item.id, label: item.disctrictName }));
 
     const createStreetsOptions = () =>
-        streets?.map((item) => ({ value: item.district_name, label: item.street_name }));
+        streets?.map((item) => ({ value: item.id, label: item.street_name }));
 
     const createBuildingsOptions = () => {
         if (buildings)
@@ -74,7 +75,7 @@ export const Main = () => {
     };
 
     const contentTop = (
-        <React.Fragment>
+        <div className={styles['top-control']}>
             <div className={styles['search-block']}>
                 <Button className={styles.bookmark}>
                     <Bookmark />
@@ -92,13 +93,14 @@ export const Main = () => {
                 <Select
                     style={{ width: '7rem' }}
                     options={createDistrictsOptions()}
-                    onSelect={(e) => setFilter((s) => ({ districtId: e, ...s }))}
+                    onSelect={(e) => setFilter((s) => ({ ...s, districtId: e }))}
                     placeholder='Район'
                 />
                 <Select
                     showSearch={true}
                     placeholder='Улица'
-                    onSelect={(e) => setFilter((s) => ({ street: e, ...s }))}
+                    style={{ width: '15rem' }}
+                    onSelect={(e) => setFilter((s) => ({ ...s, street: e }))}
                     options={createStreetsOptions()}
                     filterOption={(input, option) =>
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -115,10 +117,12 @@ export const Main = () => {
                     placeholder='Дом'
                 />
             </div>
-            <Button style={{ marginRight: '50px' }} onClick={() => router.push('/metrics')}>
-                Метрики
-            </Button>
-        </React.Fragment>
+            <Button
+                icon={<BarChartOutlined />}
+                style={{ marginRight: '10px' }}
+                onClick={() => router.push('/metrics')}
+            />
+        </div>
     );
 
     return (

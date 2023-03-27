@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { GlobalOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
 import { Button, Input, Select, Slider, Typography } from 'antd';
@@ -72,9 +73,9 @@ export const DistrictStat = () => {
     return (
         <ContentWrapper>
             <Top>
-                <Button style={{ marginRight: '50px' }} onClick={() => router.push('/main')}>
-                    Карта
-                </Button>
+                <div className={styles['top-control']}>
+                    <Button icon={<GlobalOutlined />} onClick={() => router.push('/main')} />
+                </div>
             </Top>
             <div className={styles.body}>
                 <div className={styles['map-stats']}>

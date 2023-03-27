@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
@@ -19,12 +20,21 @@ export const Auth = () => {
     const router = useRouter();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const [isPending, setIsPending] = useState(false);
 
     const onEnter = () => {
-        client.security.login(login, password).then((res) => {
-            Cookies.set('accessToken', res.data.accessToken);
-            router.push('/main');
-        });
+        setIsPending(true);
+        client.security
+            .login(login, password)
+            .then((res) => {
+                setIsPending(false);
+                Cookies.set('accessToken', res.data.accessToken);
+                router.push('/main');
+            })
+            .catch((err) => {
+                setIsPending(false);
+                console.log(err);
+            });
     };
 
     return (
@@ -49,7 +59,14 @@ export const Auth = () => {
                                 value={password}
                                 onInput={(e) => setPassword(e.currentTarget.value)}
                             />
-                            <Button type='primary' size='large' block={true} onClick={onEnter}>
+                            <Button
+                                disabled={isPending}
+                                icon={isPending ? <LoadingOutlined /> : null}
+                                type='primary'
+                                size='large'
+                                block={true}
+                                onClick={onEnter}
+                            >
                                 Вход
                             </Button>
                         </div>

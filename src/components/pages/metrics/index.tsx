@@ -9,7 +9,7 @@ const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
 
 export const Metrics = () => (
     <React.Fragment>
-        <Map />
+        <Map preload={false} />
         <DistrictStat />
     </React.Fragment>
 );

@@ -1,9 +1,9 @@
 .top-backlayer{
     position: fixed;
-    padding: 20px 0 0 50px;
+    padding: 20px 20px 0 50px;
     top:0;
     left: 0;
-    width: calc( 100vw - 50px);
+    width: calc( 100vw - 70px);
     display: flex;
     justify-content: space-between;
     height: 100px;

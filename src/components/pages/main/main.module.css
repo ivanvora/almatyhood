@@ -27,3 +27,7 @@
 .select-block >*{
     margin-right: 10px;
 }
+
+.top-control{
+    display: flex;
+}
