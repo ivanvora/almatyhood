@@ -1,11 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useRef, useState } from 'react';
-import { GeoJSON, MapContainer, TileLayer, WMSTileLayer, ZoomControl } from 'react-leaflet';
-import { LatLngExpression, Layer, Polyline, StyleFunction } from 'leaflet';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import {
+    GeoJSON,
+    MapContainer,
+    Marker,
+    Popup as LPopup,
+    TileLayer,
+    WMSTileLayer,
+    ZoomControl,
+} from 'react-leaflet';
+import { RightOutlined, StarFilled } from '@ant-design/icons';
+import { LatLngExpression, Layer } from 'leaflet';
+
+import { Button } from 'antd';
 
 import { client } from '@/modules/api';
 import { envs } from '@/modules/configs/app';
 import { TLayer } from '@/modules/models/map';
+
+import { StatRow } from '../district-stat-modal/stat-row';
 
 import {
     boundaryStyle,
@@ -16,6 +30,7 @@ import {
     riversStyle,
     seismoStyle,
 } from './geojson-styles';
+import Popup, { TProps as PopupProps } from './popup';
 
 import styles from './map.module.css';
 
@@ -40,6 +55,8 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
     const [zoom, setZoom] = useState(11);
     const [buildings, setBuildings] = useState<any>();
     const [mapRef, setMapRef] = useState<any>();
+    const [selectedFeature, setSelectedFeature] = useState<PopupProps>();
+    const [selectedBuildingLL, setSelectedBuildingLL] = useState<[number, number]>();
 
     const [center, setCenter] = useState<LatLngExpression>(position);
 
@@ -51,6 +68,8 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
         gis_rivers: null,
         gis_lakes: null,
         gis_seism: null,
+        gis_water_line: null,
+        gis_water_zone: null,
     });
 
     useEffect(() => {
@@ -102,6 +121,14 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                 .getBackwardLayers('gis_seism')
                 .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_seism: data })))
                 .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_water_zone')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_water_zone: data })))
+                .catch((error) => Promise.reject(error));
+            client.map
+                .getBackwardLayers('gis_water_line')
+                .then(({ data }) => setBackWardLayers((s) => ({ ...s, gis_water_line: data })))
+                .catch((error) => Promise.reject(error));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -116,8 +143,23 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
         foo: [123, 5566],
     };
 
-    const onEachFeature = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>, layer: Layer) => {
-        const popupContent = `<Popup><div id='building_popup'> ${feature.properties.display_name}</div> </Popup>`;
+    const onEachBuildingFeature = (
+        feature: GeoJSON.Feature<GeoJSON.Geometry, any>,
+        layer: Layer,
+    ) => {
+        const popupContent = `<Popup><div id='building_popup' class='${styles.building_popup}'></div> </Popup>`;
+
+        layer.addEventListener('click', (e) => {
+            console.log(e);
+            setSelectedBuildingLL([e.latlng.lat, e.latlng.lng]);
+            setSelectedFeature({
+                district: feature.properties.district_name,
+                number: feature.properties.number,
+                street: feature.properties.street,
+                type: '',
+                year: feature.properties.year,
+            });
+        });
 
         layer.bindPopup(popupContent);
     };
@@ -125,8 +167,6 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
     const drawBackwardLayers = () =>
         layers?.map((item) => {
             if (backwardLayers) {
-                console.log(`backwardLayers.${item}`, backwardLayers[item]);
-
                 return (
                     <GeoJSON
                         onEachFeature={(feature, layer) => {
@@ -161,6 +201,7 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
             zoomControl={false}
             ref={setMapRef}
         >
+            <Popup {...selectedFeature} />
             {isRedLines && (
                 <WMSTileLayer
                     params={{ layers: 'gis_red_lines' }}
@@ -168,10 +209,46 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                     {...WMSProps}
                 />
             )}
+            {/* {selectedBuildingLL && (
+                <Marker riseOnHover={true} interactive={true} position={selectedBuildingLL}>
+                    <LPopup>
+                        {selectedFeature ? (
+                            <div className={styles['popup-body']}>
+                                <div className={styles['popup-column']}>
+                                    <StatRow
+                                        data={selectedFeature.year ?? ''}
+                                        title='Период постройки'
+                                    />
+                                    <StatRow
+                                        data={selectedFeature.number ?? ''}
+                                        title='Номер здания'
+                                    />
+                                </div>
+                                <div className={styles['popup-column']}>
+                                    <StatRow data={selectedFeature.district ?? ''} title='Район' />
+                                    <StatRow data={selectedFeature.street ?? ''} title='Улица' />
+                                    <StatRow
+                                        data={selectedFeature.type ?? ''}
+                                        title='Тип эксплуатаций'
+                                    />
+                                </div>
+                                <div className={styles['popup-column']}>
+                                    <Button icon={<StarFilled />} />
+                                    <Button type='primary' icon={<RightOutlined />} />
+                                </div>
+                            </div>
+                        ) : null}
+                    </LPopup>
+                </Marker>
+            )} */}
             <TileLayer url={envs.API.WORLD_MAP} />
             {drawBackwardLayers()}
             {buildings ? (
-                <GeoJSON onEachFeature={onEachFeature} style={defaultStyle} data={buildings} />
+                <GeoJSON
+                    onEachFeature={onEachBuildingFeature}
+                    style={defaultStyle}
+                    data={buildings}
+                />
             ) : null}
             <ZoomControl position='bottomright' />
         </MapContainer>
