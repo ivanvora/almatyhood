@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { GlobalOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
@@ -6,7 +7,7 @@ import { Button, Input, Select, Slider, Typography } from 'antd';
 
 import { client } from '@/modules/api';
 import { DISTRICTS_MAP } from '@/modules/dictionary';
-import { useFilterBuildings, useGetCommonInfo } from '@/modules/hooks';
+import { useAxiosErrorHandle, useFilterBuildings, useGetCommonInfo } from '@/modules/hooks';
 import { TBuilding, TFilterBuildingQuery } from '@/modules/models/common';
 
 import { ContentWrapper } from '../content-wrapper';
@@ -34,6 +35,7 @@ export const DistrictStat = () => {
     const [districtName, setDistrictName] = useState('');
     const [selectedBuilding, setSelectedBuilding] = useState<number>();
     const [currentBuilding, setCurrentBuilding] = useState<TBuilding>();
+    const axiosErrorHandler = useAxiosErrorHandle();
 
     useEffect(() => {
         if (filterCommon.startDate) {
@@ -49,7 +51,7 @@ export const DistrictStat = () => {
             client.common
                 .getBuildingById(selectedBuilding)
                 .then((res) => setCurrentBuilding(res.data[0]))
-                .catch((err) => console.log(err));
+                .catch((err) => axiosErrorHandler(err));
         }
     }, [selectedBuilding]);
 

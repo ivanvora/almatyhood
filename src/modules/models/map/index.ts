@@ -5,7 +5,9 @@ export type TLayer =
     | 'gis_buildings'
     | 'gis_rivers'
     | 'gis_seism'
-    | 'gis_lakes';
+    | 'gis_lakes'
+    | 'gis_water_line'
+    | 'gis_water_zone';
 
 export type TBuildinFeature = {
     type: string;

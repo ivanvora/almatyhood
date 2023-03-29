@@ -1,15 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { BarChartOutlined } from '@ant-design/icons';
+import { BarChartOutlined, StarFilled } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
 import { Button, Input, Select } from 'antd';
 
-import { Bookmark } from '@/components/common/icons/bookmark';
 import { Clock } from '@/components/common/icons/clock';
 import { LayersButton } from '@/components/common/layers-button';
 import { Top } from '@/components/common/top';
 import { client } from '@/modules/api';
+import { useAxiosErrorHandle } from '@/modules/hooks';
 import { TBuilding, TDistrict, TFilterBuildingQuery, TStreet } from '@/modules/models/common';
 // import Map from '@/components/common/map';
 import { TLayer } from '@/modules/models/map';
@@ -25,18 +26,23 @@ export const Main = () => {
     const [selectedBuilding, setSelectedBuilding] = useState<number>();
     const [streets, setStreets] = useState<TStreet[]>();
     const [filter, setFilter] = useState<TFilterBuildingQuery>();
+    const axiosErrorHandler = useAxiosErrorHandle();
 
     const router = useRouter();
 
     useEffect(() => {
-        client.common.getDistricts().then((res) => setDistricts(res.data));
+        client.common
+            .getDistricts()
+            .then((res) => setDistricts(res.data))
+            .catch((err) => axiosErrorHandler(err));
     }, []);
 
     useEffect(() => {
         if (filter) {
             client.common
                 .filterBuildings(filter)
-                .then((res) => setBuildings(res.data.gisBuildings));
+                .then((res) => setBuildings(res.data.gisBuildings))
+                .catch((err) => axiosErrorHandler(err));
         }
     }, [filter]);
 
@@ -45,7 +51,7 @@ export const Main = () => {
             client.common
                 .getStreets(filter.districtId)
                 .then((res) => setStreets(res.data))
-                .catch((err) => console.log(err));
+                .catch((err) => axiosErrorHandler(err));
         }
     }, [filter]);
 
@@ -77,9 +83,7 @@ export const Main = () => {
     const contentTop = (
         <div className={styles['top-control']}>
             <div className={styles['search-block']}>
-                <Button className={styles.bookmark}>
-                    <Bookmark />
-                </Button>
+                <Button icon={<StarFilled />} />
                 <Button className={styles.clock}>
                     <Clock />
                 </Button>
@@ -150,6 +154,8 @@ export const Main = () => {
                     onLakesClick={() => setLayer('gis_lakes')}
                     onRiversClick={() => setLayer('gis_rivers')}
                     onSeismoClick={() => setLayer('gis_seism')}
+                    onWaterGuardZoneClick={() => setLayer('gis_water_zone')}
+                    onWaterGuardStripClick={() => setLayer('gis_water_line')}
                 />
                 <Top>{contentTop}</Top>
             </div>

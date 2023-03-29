@@ -1,13 +1,30 @@
 import { useEffect, useState } from 'react';
+import { AxiosError, isAxiosError } from 'axios';
+import { useRouter } from 'next/router';
 
 import { client } from '../api';
 import { TFilterBuildingQuery, TResponse } from '../models/common';
+
+export const useAxiosErrorHandle = () => {
+    const router = useRouter();
+
+    return (error: AxiosError | any) => {
+        console.log('dddddd');
+        console.log('error', error);
+        if (isAxiosError(error)) {
+            console.log(error.response?.status);
+            if (error.response && error.response?.status === 401) {
+                router.push('/');
+            }
+        }
+    };
+};
 
 export const useFilterBuildings = (filter: TFilterBuildingQuery) => {
     const [data, setData] = useState<TResponse>();
     const [F, setF] = useState<TFilterBuildingQuery>();
     const [isLoading, setIsLoading] = useState(false);
-
+    const axiosErrorHandler = useAxiosErrorHandle();
     useEffect(() => {
         setF(filter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -25,7 +42,7 @@ export const useFilterBuildings = (filter: TFilterBuildingQuery) => {
                     setIsLoading(false);
                 })
                 .catch((err) => {
-                    console.log(err);
+                    axiosErrorHandler(err);
                     setIsLoading(false);
                 });
         }
@@ -43,6 +60,7 @@ export const useGetCommonInfo = (filter: TFilterBuildingQuery) => {
     const [data, setData] = useState<TResponse>();
     const [F, setF] = useState<TFilterBuildingQuery>();
 
+    const axiosErrorHandler = useAxiosErrorHandle();
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -62,7 +80,7 @@ export const useGetCommonInfo = (filter: TFilterBuildingQuery) => {
                     setIsLoading(false);
                 })
                 .catch((err) => {
-                    console.log(err);
+                    axiosErrorHandler(err);
                     setIsLoading(false);
                 });
         }

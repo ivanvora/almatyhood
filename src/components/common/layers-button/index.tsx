@@ -14,6 +14,8 @@ export type TLayersButtonProps = {
     onLakesClick: (status: boolean) => void;
     onRiversClick: (status: boolean) => void;
     onSeismoClick: (status: boolean) => void;
+    onWaterGuardZoneClick: (status: boolean) => void;
+    onWaterGuardStripClick: (status: boolean) => void;
 };
 
 export const LayersButton = ({
@@ -23,6 +25,8 @@ export const LayersButton = ({
     onLakesClick,
     onRiversClick,
     onSeismoClick,
+    onWaterGuardStripClick,
+    onWaterGuardZoneClick,
 }: TLayersButtonProps) => {
     const [isBorders, setIsBorders] = useState(false);
     const [isRedlines, setIsRedlines] = useState(false);
@@ -30,6 +34,8 @@ export const LayersButton = ({
     const [isSeismo, setIsSeismo] = useState(false);
     const [isLakes, setIsLakes] = useState(false);
     const [isRivers, setIsRivers] = useState(false);
+    const [isWaterGuardZone, setIsWaterGuardZone] = useState(false);
+    const [isWaterGuardStrip, setIsWaterGuardStrip] = useState(false);
 
     return (
         <div className={styles.body}>
@@ -109,6 +115,36 @@ export const LayersButton = ({
                         }}
                         className={`${styles['layer-button']} ${styles.rivers} ${
                             isRivers ? styles.active : ''
+                        }`}
+                    />
+                </Legend>
+                <Legend
+                    title='Водоохранная зона'
+                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
+                    isSubTitle={true}
+                >
+                    <Button
+                        onClick={() => {
+                            setIsWaterGuardZone((s) => !s);
+                            onWaterGuardZoneClick(isWaterGuardZone);
+                        }}
+                        className={`${styles['layer-button']} ${styles.rivers} ${
+                            isWaterGuardZone ? styles.active : ''
+                        }`}
+                    />
+                </Legend>
+                <Legend
+                    title='Водоохранная полоса'
+                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
+                    isSubTitle={true}
+                >
+                    <Button
+                        onClick={() => {
+                            setIsWaterGuardStrip((s) => !s);
+                            onWaterGuardStripClick(isWaterGuardStrip);
+                        }}
+                        className={`${styles['layer-button']} ${styles.rivers} ${
+                            isWaterGuardStrip ? styles.active : ''
                         }`}
                     />
                 </Legend>

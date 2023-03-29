@@ -15,6 +15,7 @@ export const authInterceptorPair = {
     },
     onReject(error: AxiosError) {
         // Сделайте что-нибудь с ошибкой запроса
+        console.log('error', error);
         return Promise.reject(error);
     },
 };

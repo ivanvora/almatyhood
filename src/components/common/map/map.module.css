@@ -6,3 +6,18 @@
     left:0;
   
 }
+.building_popup{
+    width: 400px;
+}
+.popup-body{
+    width: 1400px;
+    display: flex;
+    gap:10px;
+  
+}
+
+.popup-column{
+    display: flex;
+    flex-direction: column;
+    gap:25px;
+}
