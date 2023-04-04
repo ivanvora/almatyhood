@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import {
     GeoJSON,
@@ -55,6 +55,7 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
     const [zoom, setZoom] = useState(11);
     const [buildings, setBuildings] = useState<any>();
     const [mapRef, setMapRef] = useState<any>();
+    const [buildingLayerRef, setBuildingLayerRef] = useState<any>();
     const [selectedFeature, setSelectedFeature] = useState<PopupProps>();
     const [selectedBuildingLL, setSelectedBuildingLL] = useState<[number, number]>();
 
@@ -79,12 +80,16 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
             );
 
             if (feature) {
-                const newCenter = feature.geometry.coordinates[0][0][0].reverse();
+                const coordinates = [...feature.geometry.coordinates[0][0][0]];
+                const newCenter = coordinates.reverse();
 
                 setZoom(15);
-                setCenter(newCenter);
+                setCenter(newCenter as React.SetStateAction<LatLngExpression>);
                 if (mapRef) {
-                    mapRef.setView(newCenter, 17);
+                    mapRef.flyTo(newCenter, 17);
+                }
+                if (buildingLayerRef) {
+                    buildingLayerRef.openPopup([43.26226870185979, 76.89432978630066]);
                 }
             }
         }
@@ -150,7 +155,6 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
         const popupContent = `<Popup><div id='building_popup' class='${styles.building_popup}'></div> </Popup>`;
 
         layer.addEventListener('click', (e) => {
-            console.log(e);
             setSelectedBuildingLL([e.latlng.lat, e.latlng.lng]);
             setSelectedFeature({
                 district: feature.properties.district_name,
@@ -209,42 +213,11 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                     {...WMSProps}
                 />
             )}
-            {/* {selectedBuildingLL && (
-                <Marker riseOnHover={true} interactive={true} position={selectedBuildingLL}>
-                    <LPopup>
-                        {selectedFeature ? (
-                            <div className={styles['popup-body']}>
-                                <div className={styles['popup-column']}>
-                                    <StatRow
-                                        data={selectedFeature.year ?? ''}
-                                        title='Период постройки'
-                                    />
-                                    <StatRow
-                                        data={selectedFeature.number ?? ''}
-                                        title='Номер здания'
-                                    />
-                                </div>
-                                <div className={styles['popup-column']}>
-                                    <StatRow data={selectedFeature.district ?? ''} title='Район' />
-                                    <StatRow data={selectedFeature.street ?? ''} title='Улица' />
-                                    <StatRow
-                                        data={selectedFeature.type ?? ''}
-                                        title='Тип эксплуатаций'
-                                    />
-                                </div>
-                                <div className={styles['popup-column']}>
-                                    <Button icon={<StarFilled />} />
-                                    <Button type='primary' icon={<RightOutlined />} />
-                                </div>
-                            </div>
-                        ) : null}
-                    </LPopup>
-                </Marker>
-            )} */}
             <TileLayer url={envs.API.WORLD_MAP} />
             {drawBackwardLayers()}
             {buildings ? (
                 <GeoJSON
+                    ref={setBuildingLayerRef}
                     onEachFeature={onEachBuildingFeature}
                     style={defaultStyle}
                     data={buildings}

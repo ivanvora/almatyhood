@@ -7,3 +7,6 @@ HTML, body{
     padding: 0;
     height: 100%;
 }
+.leaflet-popup-content{
+    width: 400px !important;
+}

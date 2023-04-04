@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 
 import { Button, Input, Select } from 'antd';
 
+import { HouseOption } from '@/components/common/house-option';
+import { HouseSelector } from '@/components/common/house-selector';
 import { Clock } from '@/components/common/icons/clock';
 import { LayersButton } from '@/components/common/layers-button';
 import { Top } from '@/components/common/top';
@@ -61,13 +63,12 @@ export const Main = () => {
     const createStreetsOptions = () =>
         streets?.map((item) => ({ value: item.id, label: item.street_name }));
 
-    const createBuildingsOptions = () => {
-        if (buildings)
-            return buildings?.map((item) => ({ value: item.fid, label: item.fullNameStr }));
+    // const createBuildingsOptions = () => {
+    //     if (buildings)
+    //         return buildings?.map((item) => ({ value: item.fid, label: item.fullNameStr }));
 
-        return undefined;
-    };
-
+    //     return undefined;
+    // };
     const setLayer = (layer: TLayer) => {
         setLayers((state) => {
             if (state === undefined) return [layer];
@@ -122,17 +123,15 @@ export const Main = () => {
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                     }
                 />
-                <Select
-                    disabled={!filter?.districtId}
-                    showSearch={true}
-                    value={selectedBuilding}
-                    filterOption={(input, option) =>
-                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                    }
-                    style={{ width: '15rem' }}
-                    onSelect={(e) => setSelectedBuilding(e)}
-                    options={createBuildingsOptions()}
-                    placeholder='Дом'
+                <HouseSelector
+                    disbled={!filter?.street}
+                    placeholder='дом'
+                    onSelectedItem={(v) => setSelectedBuilding(+v)}
+                    options={buildings?.map((i) => ({
+                        selectOption: <HouseOption building={i} />,
+                        label: i.fullNameStr ?? '',
+                        value: i.fid ? i.fid.toString(10) : '',
+                    }))}
                 />
             </div>
             <Button

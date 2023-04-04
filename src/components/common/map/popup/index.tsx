@@ -4,7 +4,9 @@ import { RightOutlined, StarFilled } from '@ant-design/icons';
 
 import { Button } from 'antd';
 
-import { StatRow } from '../../district-stat-modal/stat-row';
+import Legend from '../../legend';
+
+import styles from './popup.module.css';
 
 export type TProps = {
     number?: string;
@@ -15,26 +17,25 @@ export type TProps = {
 };
 
 export default function Popup({ district, street, type, year, number }: TProps) {
-    const root = document.querySelector('#building_popup');
+    const root = document.querySelectorAll('#building_popup');
 
-    if (root) {
+    if (root.length > 0) {
         return ReactDOM.createPortal(
-            <div style={{ zIndex: '99999', width: '400px' }}>
-                <div>
-                    <StatRow data={year ?? ''} title='Период постройки' />
-                    <StatRow data={number ?? ''} title='Номер здания' />
+            <div className={styles.body}>
+                <div className={styles.pic} />
+                <div className={styles.data}>
+                    <Legend title='Период постройки'>{year}</Legend>
+                    <Legend title='Район'>{district}</Legend>
+                    <Legend title='Улица'>{street}</Legend>
+                    <Legend title='Номер'>{number}</Legend>
+                    <Legend title='Тип эксплуатаций'>{type}</Legend>
                 </div>
-                <div>
-                    <StatRow data={district ?? ''} title='Район' />
-                    <StatRow data={street ?? ''} title='Улица' />
-                    <StatRow data={type ?? ''} title='Тип эксплуатаций' />
-                </div>
-                <div>
+                <div className={styles.control}>
                     <Button icon={<StarFilled />} />
                     <Button type='primary' icon={<RightOutlined />} />
                 </div>
             </div>,
-            root,
+            root[root.length - 1],
         );
     }
 

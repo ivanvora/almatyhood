@@ -11,11 +11,6 @@ class Client {
     constructor(instance: AxiosInstance) {
         const isMock = envs.API.MOCK === '1';
 
-        instance.interceptors.request.use(
-            authInterceptorPair.onFulfiled,
-            authInterceptorPair.onReject,
-        );
-
         this.map = new Map(instance, isMock);
         this.common = new Common(instance, isMock);
         this.security = new Security(instance, isMock);
@@ -32,4 +27,10 @@ const instance = axios.create({
     timeout: +envs.API.TIMEOUT,
 });
 
-export const client = new Client(instance);
+const configInstance = (i: AxiosInstance) => {
+    i.interceptors.request.use(authInterceptorPair.onFulfiled, authInterceptorPair.onReject);
+
+    return i;
+};
+
+export const client = new Client(configInstance(instance));

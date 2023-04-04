@@ -8,7 +8,7 @@ import { Button, Input, Select, Slider, Typography } from 'antd';
 import { client } from '@/modules/api';
 import { DISTRICTS_MAP } from '@/modules/dictionary';
 import { useAxiosErrorHandle, useFilterBuildings, useGetCommonInfo } from '@/modules/hooks';
-import { TBuilding, TFilterBuildingQuery } from '@/modules/models/common';
+import { TBuilding, TFilterBuildingQuery, TStreet } from '@/modules/models/common';
 
 import { ContentWrapper } from '../content-wrapper';
 import { MapScheme } from '../icons/map-scheme';
@@ -35,6 +35,7 @@ export const DistrictStat = () => {
     const [districtName, setDistrictName] = useState('');
     const [selectedBuilding, setSelectedBuilding] = useState<number>();
     const [currentBuilding, setCurrentBuilding] = useState<TBuilding>();
+    const [streets, setStreets] = useState<TStreet[]>();
     const axiosErrorHandler = useAxiosErrorHandle();
 
     useEffect(() => {
@@ -45,6 +46,15 @@ export const DistrictStat = () => {
             setPeriodFilter((s) => [s[0], filterCommon.endDate ?? ENDDATEF]);
         }
     }, [filterCommon]);
+
+    useEffect(() => {
+        if (filter.districtId) {
+            client.common
+                .getStreets(filter.districtId)
+                .then((res) => setStreets(res.data))
+                .catch((err) => axiosErrorHandler(err));
+        }
+    }, [filter]);
 
     useEffect(() => {
         if (selectedBuilding) {
@@ -71,6 +81,9 @@ export const DistrictStat = () => {
 
         return undefined;
     };
+
+    const createStreetsOptions = () =>
+        streets?.map((item) => ({ value: item.id, label: item.street_name }));
 
     return (
         <ContentWrapper>
@@ -179,16 +192,24 @@ export const DistrictStat = () => {
                                             />
                                         </Legend>
                                         <Input placeholder='Кадастровый №' />
-                                        <Input
+                                        <Select
+                                            disabled={!filter?.districtId}
+                                            showSearch={true}
+                                            value={filter?.street}
                                             placeholder='Улица'
-                                            onInput={(e) => {
-                                                setFilter((s) => ({
-                                                    ...s,
-                                                    street: e?.currentTarget?.value,
-                                                }));
+                                            onSelect={(e) => {
+                                                setFilter((s) => ({ ...s, street: e }));
+                                                setSelectedBuilding(undefined);
                                             }}
+                                            options={createStreetsOptions()}
+                                            filterOption={(input, option) =>
+                                                (option?.label ?? '')
+                                                    .toLowerCase()
+                                                    .includes(input.toLowerCase())
+                                            }
                                         />
                                         <Select
+                                            disabled={!filter?.street}
                                             showSearch={true}
                                             filterOption={(input, option) =>
                                                 (option?.label ?? '')

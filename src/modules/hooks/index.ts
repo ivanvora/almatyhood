@@ -9,7 +9,6 @@ export const useAxiosErrorHandle = () => {
     const router = useRouter();
 
     return (error: AxiosError | any) => {
-        console.log('dddddd');
         console.log('error', error);
         if (isAxiosError(error)) {
             console.log(error.response?.status);
