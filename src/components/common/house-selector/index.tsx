@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { ReactNode, useEffect, useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import { Button, Popover, Typography } from 'antd';
 
@@ -8,7 +9,10 @@ import styles from './house-selector.module.css';
 
 type Props = {
     placeholder?: string;
+    hideText?: boolean;
+    buttonIcon?: ReactNode;
     disbled?: boolean;
+    isLoading?: boolean;
     options?: Array<{
         value: string;
         label: string;
@@ -17,7 +21,15 @@ type Props = {
     onSelectedItem?: (value: string) => void;
 };
 
-export const HouseSelector = ({ placeholder, options, onSelectedItem, disbled = false }: Props) => {
+export const HouseSelector = ({
+    placeholder,
+    options,
+    onSelectedItem,
+    disbled = false,
+    isLoading = false,
+    buttonIcon = null,
+    hideText = false,
+}: Props) => {
     const [selectedItem, setSelectedItem] = useState<string>('');
     const [selectedLabel, setSelectedLabel] = useState<string>('');
 
@@ -47,13 +59,14 @@ export const HouseSelector = ({ placeholder, options, onSelectedItem, disbled = 
             ))}
         </div>
     );
+    const text = selectedLabel || (
+        <Typography.Text style={{ color: 'lightgrey' }}>{placeholder}</Typography.Text>
+    );
 
     return (
         <Popover placement='bottom' content={createContent()} trigger='click'>
-            <Button disabled={disbled}>
-                {selectedLabel || (
-                    <Typography.Text style={{ color: 'lightgrey' }}>{placeholder}</Typography.Text>
-                )}
+            <Button disabled={disbled} icon={isLoading ? <LoadingOutlined /> : buttonIcon}>
+                {!hideText && text}
             </Button>
         </Popover>
     );

@@ -109,7 +109,7 @@ export const DistrictStat = () => {
                                         <Legend bigTitle={true} title={`${ENDDATEF} год`} />
                                     </div>
                                     <Slider
-                                        style={{ width: '250px' }}
+                                        style={{ width: '250px', zIndex: 9999 }}
                                         range={true}
                                         min={STARTDATEF}
                                         max={ENDDATEF}
@@ -128,7 +128,7 @@ export const DistrictStat = () => {
                                     }
                                     title='Кол-во объектов'
                                 />
-                                <StatRow data='' title='Общая площадь' />
+                                <StatRow data={commonData?.totalArea ?? 0} title='Общая площадь' />
                                 <StatRow
                                     data={commonData?.countOfFlat ? commonData?.countOfFlat : ''}
                                     title='Кол-во квартир'

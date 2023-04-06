@@ -51,13 +51,14 @@ const GJstyles = {
 
 const Map = ({ layers, featureId, preload = true }: Props) => {
     const position: LatLngExpression = [43.25667, 76.92861];
+    const markerref = useRef(null);
 
     const [zoom, setZoom] = useState(11);
     const [buildings, setBuildings] = useState<any>();
     const [mapRef, setMapRef] = useState<any>();
     const [buildingLayerRef, setBuildingLayerRef] = useState<any>();
     const [selectedFeature, setSelectedFeature] = useState<PopupProps>();
-    const [selectedBuildingLL, setSelectedBuildingLL] = useState<[number, number]>();
+    const [selectedBuildingLL, setSelectedBuildingLL] = useState<LatLngExpression>();
 
     const [center, setCenter] = useState<LatLngExpression>(position);
 
@@ -84,13 +85,16 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                 const newCenter = coordinates.reverse();
 
                 setZoom(15);
-                setCenter(newCenter as React.SetStateAction<LatLngExpression>);
+                setCenter(newCenter as LatLngExpression);
+                setSelectedBuildingLL(newCenter as LatLngExpression);
                 if (mapRef) {
                     mapRef.flyTo(newCenter, 17);
                 }
-                if (buildingLayerRef) {
-                    buildingLayerRef.openPopup([43.26226870185979, 76.89432978630066]);
-                }
+                // const marker = markerref.current;
+
+                // if (marker) {
+                //     marker.openPopup();
+                // }
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,13 +159,13 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
         const popupContent = `<Popup><div id='building_popup' class='${styles.building_popup}'></div> </Popup>`;
 
         layer.addEventListener('click', (e) => {
-            setSelectedBuildingLL([e.latlng.lat, e.latlng.lng]);
             setSelectedFeature({
                 district: feature.properties.district_name,
                 number: feature.properties.number,
                 street: feature.properties.street,
                 type: '',
                 year: feature.properties.year,
+                fid: feature.properties.fid,
             });
         });
 
@@ -191,6 +195,7 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
 
             return null;
         });
+
     const isRedLines = layers?.includes('gis_red_lines');
 
     const map = (
@@ -205,6 +210,13 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
             zoomControl={false}
             ref={setMapRef}
         >
+            {selectedBuildingLL ? (
+                <Marker ref={markerref} position={selectedBuildingLL}>
+                    {/* <LPopup>
+                        <div id='building_popup' className={styles.building_popup} />
+                    </LPopup> */}
+                </Marker>
+            ) : null}
             <Popup {...selectedFeature} />
             {isRedLines && (
                 <WMSTileLayer

@@ -29,6 +29,7 @@ export const Auth = () => {
             .then((res) => {
                 setIsPending(false);
                 Cookies.set('accessToken', res.data.accessToken);
+                Cookies.set('userId', res.data.id);
                 router.push('/main');
             })
             .catch((err) => {

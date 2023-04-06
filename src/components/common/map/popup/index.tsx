@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { RightOutlined, StarFilled } from '@ant-design/icons';
+import Cookies from 'js-cookie';
 
 import { Button } from 'antd';
+
+import { client } from '@/modules/api';
+import { GET_LIKES } from '@/modules/redux/actions';
+import { useAppDispatch } from '@/modules/redux/hooks';
 
 import Legend from '../../legend';
 
@@ -14,10 +19,23 @@ export type TProps = {
     street?: string;
     district?: string;
     type?: string;
+    fid?: number;
 };
 
-export default function Popup({ district, street, type, year, number }: TProps) {
+export default function Popup({ district, street, type, year, number, fid }: TProps) {
     const root = document.querySelectorAll('#building_popup');
+    const dispatch = useAppDispatch();
+
+    const addLike = () => {
+        const userid = Cookies.get('userId');
+
+        if (userid && fid) {
+            client.common.addLike(+userid, fid).then((r) => {
+                dispatch(GET_LIKES(+userid));
+                console.log(r.status);
+            });
+        }
+    };
 
     if (root.length > 0) {
         return ReactDOM.createPortal(
@@ -31,7 +49,7 @@ export default function Popup({ district, street, type, year, number }: TProps) 
                     <Legend title='Тип эксплуатаций'>{type}</Legend>
                 </div>
                 <div className={styles.control}>
-                    <Button icon={<StarFilled />} />
+                    <Button icon={<StarFilled />} onClick={() => addLike()} />
                     <Button type='primary' icon={<RightOutlined />} />
                 </div>
             </div>,
@@ -39,5 +57,5 @@ export default function Popup({ district, street, type, year, number }: TProps) 
         );
     }
 
-    return <div id='aaa'>dsadsda</div>;
+    return <div id='aaa' />;
 }

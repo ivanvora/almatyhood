@@ -12,7 +12,7 @@ class Client {
         const isMock = envs.API.MOCK === '1';
 
         this.map = new Map(instance, isMock);
-        this.common = new Common(instance, isMock);
+        this.common = new Common(instance);
         this.security = new Security(instance, isMock);
     }
 

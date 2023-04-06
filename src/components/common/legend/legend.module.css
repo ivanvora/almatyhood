@@ -1,6 +1,7 @@
 .body{
     display: flex;
     flex-direction: column;
+    
 }
 .sub-title{
     flex-direction: column-reverse;
@@ -12,6 +13,7 @@
     font-size: 0.7rem;
     font-weight: 500;
     line-height: 10px;
+    margin-bottom: 5px;
 }
 .big-title{
     font-size: 1rem;

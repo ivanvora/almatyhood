@@ -8,8 +8,12 @@ export class Security extends AClientFacade {
     }
 
     login(login: string, password: string) {
-        return this.instance.post<{ accessToken: string }>(endpoints.security.login, null, {
-            params: { login, password },
-        });
+        return this.instance.post<{ accessToken: string; id: string }>(
+            endpoints.security.login,
+            null,
+            {
+                params: { login, password },
+            },
+        );
     }
 }
