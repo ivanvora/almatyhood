@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { BarChartOutlined, LoadingOutlined, StarFilled } from '@ant-design/icons';
+import { BarChartOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -108,7 +108,7 @@ export const Main = () => {
                 <HouseSelector
                     hideText={true}
                     isLoading={isloadingLikes}
-                    buttonIcon={<StarFilled />}
+                    buttonIcon={<HeartOutlined />}
                     onSelectedItem={(v) => setSelectedBuilding(+v)}
                     placeholder={undefined}
                     options={likes?.map((i) => ({
