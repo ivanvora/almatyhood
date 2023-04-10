@@ -128,7 +128,10 @@ export const DistrictStat = () => {
                                     }
                                     title='Кол-во объектов'
                                 />
-                                <StatRow data={commonData?.totalArea ?? 0} title='Общая площадь' />
+                                <StatRow
+                                    data={`${commonData?.totalArea ?? 0} м2`}
+                                    title='Общая площадь'
+                                />
                                 <StatRow
                                     data={commonData?.countOfFlat ? commonData?.countOfFlat : ''}
                                     title='Кол-во квартир'
@@ -231,6 +234,7 @@ export const DistrictStat = () => {
                                     <StatProgress
                                         progress={data?.totalArea ?? 0}
                                         value={commonData?.totalArea ?? 0}
+                                        measureUnit='м2'
                                         title='Площадь'
                                     />
                                     <StatProgress

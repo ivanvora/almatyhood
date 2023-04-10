@@ -8,9 +8,10 @@ type TStatProgressProps = {
     progress: number;
     value: number;
     title: string;
+    measureUnit?: string;
 };
 
-export const StatProgress = ({ progress, value, title }: TStatProgressProps) => {
+export const StatProgress = ({ progress, value, title, measureUnit }: TStatProgressProps) => {
     const percent = () => Math.round(progress / (value / 100));
 
     return (
@@ -18,7 +19,7 @@ export const StatProgress = ({ progress, value, title }: TStatProgressProps) => 
             <Progress percent={percent()} />
             <Legend bigTitle={true} title={title}>
                 <Typography.Title style={{ margin: '0', fontSize: '1vw' }} level={2}>
-                    {progress}
+                    {`${progress} ${measureUnit ?? ''}`}
                 </Typography.Title>
             </Legend>
         </div>

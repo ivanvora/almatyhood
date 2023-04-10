@@ -13,6 +13,7 @@ type Props = {
     buttonIcon?: ReactNode;
     disbled?: boolean;
     isLoading?: boolean;
+    value?: string;
     options?: Array<{
         value: string;
         label: string;
@@ -25,6 +26,7 @@ export const HouseSelector = ({
     placeholder,
     options,
     onSelectedItem,
+    value,
     disbled = false,
     isLoading = false,
     buttonIcon = null,
@@ -44,6 +46,7 @@ export const HouseSelector = ({
         <div className={styles['options-body']}>
             {options?.map((i) => (
                 <div
+                    key={i.value}
                     onClick={() => {
                         setSelectedItem(i.value);
                         setSelectedLabel(i.label);
@@ -59,7 +62,7 @@ export const HouseSelector = ({
             ))}
         </div>
     );
-    const text = selectedLabel || (
+    const text = (value && selectedLabel) || (
         <Typography.Text style={{ color: 'lightgrey' }}>{placeholder}</Typography.Text>
     );
 

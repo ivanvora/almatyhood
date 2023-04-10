@@ -46,6 +46,12 @@ export class Common extends AClientFacade {
         });
     }
 
+    removeLike(UserId: number, fid: number) {
+        return this.instance.delete(endpoints.common.removeLike, {
+            params: { UserId, buildingsId: fid },
+        });
+    }
+
     getDistricts() {
         return this.instance.get<TDistrict[]>(endpoints.common.getDistricts);
     }

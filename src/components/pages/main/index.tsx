@@ -66,7 +66,7 @@ export const Main = () => {
                     setIsBuildingsLoading(false);
                 });
         }
-    }, [filter]);
+    }, [filter?.street]);
 
     useEffect(() => {
         if (filter?.districtId) {
@@ -160,6 +160,7 @@ export const Main = () => {
                     disbled={!filter?.street}
                     isLoading={isBuildingsLoading}
                     placeholder='дом'
+                    value={selectedBuilding?.toString()}
                     onSelectedItem={(v) => setSelectedBuilding(+v)}
                     options={buildings?.map((i) => ({
                         selectOption: <HouseOption building={i} />,

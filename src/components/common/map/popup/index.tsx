@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { RightOutlined, StarFilled } from '@ant-design/icons';
 import Cookies from 'js-cookie';
@@ -27,23 +27,41 @@ export default function Popup({ district, street, type, year, number, fid }: TPr
     const dispatch = useAppDispatch();
     const { likes } = useAppSelector((s) => s.likesReducer);
 
-    const [isLiked, setIsLiked] = useState(false);
+    const isLiked = () => {
+        if (likes && likes.length > 0) {
+            const l = likes?.find((i) => i.fid === fid);
 
-    useEffect(() => {
-        const l = likes?.find((i) => i.fid === fid);
+            return l !== undefined && l?.fid === fid;
+        }
 
-        setIsLiked(l?.fid === fid);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [likes]);
+        return false;
+    };
 
-    const addLike = () => {
+    const likeOperators = {
+        addLike: (userid: number, fid: number) => {
+            client.common.addLike(userid, fid).then((r) => {
+                dispatch(GET_LIKES(userid));
+                console.log(r.status);
+            });
+        },
+        removeLike: (userid: number, fid: number) => {
+            client.common.removeLike(userid, fid).then((r) => {
+                dispatch(GET_LIKES(userid));
+                console.log(r.status);
+            });
+        },
+    };
+
+    const switchLike = () => {
         const userid = Cookies.get('userId');
 
         if (userid && fid) {
-            client.common.addLike(+userid, fid).then((r) => {
-                dispatch(GET_LIKES(+userid));
-                console.log(r.status);
-            });
+            if (isLiked()) {
+                likeOperators.removeLike(+userid, fid);
+            }
+            if (!isLiked()) {
+                likeOperators.addLike(+userid, fid);
+            }
         }
     };
 
@@ -60,9 +78,9 @@ export default function Popup({ district, street, type, year, number, fid }: TPr
                 </div>
                 <div className={styles.control}>
                     <Button
-                        type={isLiked ? 'primary' : 'default'}
+                        type={isLiked() ? 'primary' : 'default'}
                         icon={<StarFilled />}
-                        onClick={() => addLike()}
+                        onClick={() => switchLike()}
                     />
                     <Button type='primary' icon={<RightOutlined />} />
                 </div>

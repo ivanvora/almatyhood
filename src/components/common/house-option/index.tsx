@@ -33,15 +33,32 @@ export const HouseOption = ({ building }: Props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [likes]);
 
-    const addLike = () => {
+    const likeOperators = {
+        addLike: (userid: number, fid: number) => {
+            client.common.addLike(userid, fid).then((r) => {
+                dispatch(GET_LIKES(userid));
+                console.log(r.status);
+            });
+        },
+        removeLike: (userid: number, fid: number) => {
+            client.common.removeLike(userid, fid).then((r) => {
+                dispatch(GET_LIKES(userid));
+                console.log(r.status);
+            });
+        },
+    };
+
+    const switchLike = () => {
         const userid = Cookies.get('userId');
         const { fid } = building;
 
         if (userid && fid) {
-            client.common.addLike(+userid, fid).then((r) => {
-                dispatch(GET_LIKES(+userid));
-                console.log(r.status);
-            });
+            if (isLiked) {
+                likeOperators.removeLike(+userid, fid);
+            }
+            if (!isLiked) {
+                likeOperators.addLike(+userid, fid);
+            }
         }
     };
 
@@ -58,7 +75,7 @@ export const HouseOption = ({ building }: Props) => {
             <div className={styles.control}>
                 <Button
                     type={isLiked ? 'primary' : 'default'}
-                    onClick={() => addLike()}
+                    onClick={() => switchLike()}
                     icon={<StarFilled />}
                 />
                 <Button icon={<ArrowRightOutlined />} />

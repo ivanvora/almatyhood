@@ -17,6 +17,7 @@ export const endpoints = {
         getBuildingById: (id: number) => `${commonHost}/GisBuildingById?Id=${id}`,
         getLikes: `${commonHost}/GetLikes`,
         addLike: `${commonHost}/InsertLikes`,
+        removeLike: `${commonHost}/DeleteLike`,
     },
     security: {
         login: `${securityHost}/PostLoginDetails`,
