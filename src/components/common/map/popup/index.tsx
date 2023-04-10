@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { RightOutlined, StarFilled } from '@ant-design/icons';
+import { HeartOutlined, RightOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 
 import { Button } from 'antd';
@@ -79,7 +79,7 @@ export default function Popup({ district, street, type, year, number, fid }: TPr
                 <div className={styles.control}>
                     <Button
                         type={isLiked() ? 'primary' : 'default'}
-                        icon={<StarFilled />}
+                        icon={<HeartOutlined />}
                         onClick={() => switchLike()}
                     />
                     <Button type='primary' icon={<RightOutlined />} />

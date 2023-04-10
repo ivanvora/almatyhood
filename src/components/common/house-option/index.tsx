@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRightOutlined, StarFilled } from '@ant-design/icons';
+import { ArrowRightOutlined, HeartOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 
 import { Button } from 'antd';
@@ -76,7 +76,7 @@ export const HouseOption = ({ building }: Props) => {
                 <Button
                     type={isLiked ? 'primary' : 'default'}
                     onClick={() => switchLike()}
-                    icon={<StarFilled />}
+                    icon={<HeartOutlined />}
                 />
                 <Button icon={<ArrowRightOutlined />} />
             </div>
