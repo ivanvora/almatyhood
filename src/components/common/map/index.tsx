@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
 import {
     GeoJSON,
     MapContainer,
@@ -10,16 +9,13 @@ import {
     WMSTileLayer,
     ZoomControl,
 } from 'react-leaflet';
-import { RightOutlined, StarFilled } from '@ant-design/icons';
 import { LatLngExpression, Layer } from 'leaflet';
-
-import { Button } from 'antd';
 
 import { client } from '@/modules/api';
 import { envs } from '@/modules/configs/app';
 import { TLayer } from '@/modules/models/map';
 
-import { StatRow } from '../district-stat-modal/stat-row';
+import { TargetPopup } from '../target-popup';
 
 import {
     boundaryStyle,
@@ -51,7 +47,7 @@ const GJstyles = {
 
 const Map = ({ layers, featureId, preload = true }: Props) => {
     const position: LatLngExpression = [43.25667, 76.92861];
-    const markerref = useRef(null);
+    const [markerref, setMarkerRef] = useState<any>();
 
     const [zoom, setZoom] = useState(11);
     const [buildings, setBuildings] = useState<any>();
@@ -84,6 +80,15 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                 const coordinates = [...feature.geometry.coordinates[0][0][0]];
                 const newCenter = coordinates.reverse();
 
+                setSelectedFeature({
+                    district: feature.properties.district_name,
+                    number: feature.properties.number,
+                    street: feature.properties.street,
+                    type: '',
+                    year: feature.properties.year,
+                    fid: feature.properties.fid,
+                });
+
                 setZoom(15);
                 setCenter(newCenter as LatLngExpression);
                 setSelectedBuildingLL(newCenter as LatLngExpression);
@@ -91,14 +96,16 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                     mapRef.flyTo(newCenter, 17);
                 }
                 // const marker = markerref.current;
-
-                // if (marker) {
-                //     marker.openPopup();
-                // }
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [featureId]);
+
+    useEffect(() => {
+        if (markerref) {
+            markerref.openPopup();
+        }
+    }, [markerref]);
 
     useEffect(() => {
         if (preload) {
@@ -168,7 +175,6 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                 fid: feature.properties.fid,
             });
         });
-
         layer.bindPopup(popupContent);
     };
 
@@ -211,10 +217,10 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
             ref={setMapRef}
         >
             {selectedBuildingLL ? (
-                <Marker ref={markerref} position={selectedBuildingLL}>
-                    {/* <LPopup>
-                        <div id='building_popup' className={styles.building_popup} />
-                    </LPopup> */}
+                <Marker ref={setMarkerRef} position={selectedBuildingLL}>
+                    <LPopup>
+                        <TargetPopup {...selectedFeature} />
+                    </LPopup>
                 </Marker>
             ) : null}
             <Popup {...selectedFeature} />
