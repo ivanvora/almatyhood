@@ -18,6 +18,7 @@ export const endpoints = {
         getLikes: `${commonHost}/GetLikes`,
         addLike: `${commonHost}/InsertLikes`,
         removeLike: `${commonHost}/DeleteLike`,
+        getBuildingByKadastr: `${commonHost}/GetBuildingsByKadastrov`,
     },
     security: {
         login: `${securityHost}/PostLoginDetails`,

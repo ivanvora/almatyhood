@@ -3,7 +3,7 @@ import { AxiosError, isAxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { client } from '../api';
-import { TFilterBuildingQuery, TResponse } from '../models/common';
+import { TBuilding, TFilterBuildingQuery, TResponse } from '../models/common';
 
 export const useAxiosErrorHandle = () => {
     const router = useRouter();
@@ -24,6 +24,7 @@ export const useFilterBuildings = (filter: TFilterBuildingQuery) => {
     const [F, setF] = useState<TFilterBuildingQuery>();
     const [isLoading, setIsLoading] = useState(false);
     const axiosErrorHandler = useAxiosErrorHandle();
+
     useEffect(() => {
         setF(filter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +75,43 @@ export const useGetCommonInfo = (filter: TFilterBuildingQuery) => {
         if (F) {
             client.common
                 .getBuildingsInfo(F, controller.signal)
+                .then(({ data }) => {
+                    setData(data);
+                    setIsLoading(false);
+                })
+                .catch((err) => {
+                    axiosErrorHandler(err);
+                    setIsLoading(false);
+                });
+        }
+
+        return () => {
+            controller.abort();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [F]);
+
+    return { data, isLoading };
+};
+
+export const useGetBuildingsByKadastr = (number: string) => {
+    const [data, setData] = useState<TBuilding[]>();
+    const [F, setF] = useState<string>();
+    const [isLoading, setIsLoading] = useState(false);
+    const axiosErrorHandler = useAxiosErrorHandle();
+
+    useEffect(() => {
+        setF(number);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [number]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        if (F) {
+            setIsLoading(true);
+            client.common
+                .getBuildingByKadastr(F, controller.signal)
                 .then(({ data }) => {
                     setData(data);
                     setIsLoading(false);

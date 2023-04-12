@@ -7,7 +7,12 @@ import { Button, Input, Select, Slider, Typography } from 'antd';
 
 import { client } from '@/modules/api';
 import { DISTRICTS_MAP } from '@/modules/dictionary';
-import { useAxiosErrorHandle, useFilterBuildings, useGetCommonInfo } from '@/modules/hooks';
+import {
+    useAxiosErrorHandle,
+    useFilterBuildings,
+    useGetBuildingsByKadastr,
+    useGetCommonInfo,
+} from '@/modules/hooks';
 import { TBuilding, TFilterBuildingQuery, TStreet } from '@/modules/models/common';
 
 import { ContentWrapper } from '../content-wrapper';
@@ -36,6 +41,9 @@ export const DistrictStat = () => {
     const [selectedBuilding, setSelectedBuilding] = useState<number>();
     const [currentBuilding, setCurrentBuilding] = useState<TBuilding>();
     const [streets, setStreets] = useState<TStreet[]>();
+    const [kadastr, setKadastr] = useState('');
+    const [currentFilter, setCurrentFilter] = useState<'kadastr' | 'main'>();
+
     const axiosErrorHandler = useAxiosErrorHandle();
 
     useEffect(() => {
@@ -48,6 +56,7 @@ export const DistrictStat = () => {
     }, [filterCommon]);
 
     useEffect(() => {
+        setCurrentFilter('main');
         if (filter.districtId) {
             client.common
                 .getStreets(filter.districtId)
@@ -65,15 +74,28 @@ export const DistrictStat = () => {
         }
     }, [selectedBuilding]);
 
+    useEffect(() => {
+        setCurrentFilter('kadastr');
+    }, [kadastr]);
+
     const { data } = useFilterBuildings(filter);
 
     const { data: commonData } = useGetCommonInfo(filterCommon);
 
+    const { data: kadastrData } = useGetBuildingsByKadastr(kadastr);
+
     const getDistrictMap = (key: TDistrict) => DISTRICTS_MAP[key];
 
     const createSelectOptions = () => {
-        if (data && data.gisBuildings && filter.districtId) {
+        if (data && data.gisBuildings && filter.districtId && currentFilter === 'main') {
             return data?.gisBuildings?.map((item) => ({
+                value: item.gid,
+                label: item.fullNameStr,
+            }));
+        }
+
+        if (kadastrData && currentFilter === 'kadastr') {
+            return kadastrData?.map((item) => ({
                 value: item.gid,
                 label: item.fullNameStr,
             }));
@@ -84,6 +106,13 @@ export const DistrictStat = () => {
 
     const createStreetsOptions = () =>
         streets?.map((item) => ({ value: item.id, label: item.street_name }));
+
+    const disableBuildingSelect = () => {
+        if (currentFilter === 'kadastr') return false;
+        if (currentFilter === 'main' && filter?.street) return false;
+
+        return true;
+    };
 
     return (
         <ContentWrapper>
@@ -142,10 +171,10 @@ export const DistrictStat = () => {
                             </div>
                             <MapScheme
                                 onClick={(d) => {
-                                    setFilter((s) => ({
-                                        ...s,
+                                    setFilter(() => ({
                                         districtId: getDistrictMap(d as TDistrict).id,
                                     }));
+                                    setSelectedBuilding(undefined);
                                     setDistrictName(getDistrictMap(d as TDistrict).name);
                                 }}
                                 className={styles.map}
@@ -194,7 +223,11 @@ export const DistrictStat = () => {
                                                 }
                                             />
                                         </Legend>
-                                        <Input placeholder='Кадастровый №' />
+                                        <Input
+                                            placeholder='Кадастровый №'
+                                            value={kadastr}
+                                            onChange={(e) => setKadastr(e.currentTarget.value)}
+                                        />
                                         <Select
                                             disabled={!filter?.districtId}
                                             showSearch={true}
@@ -212,8 +245,9 @@ export const DistrictStat = () => {
                                             }
                                         />
                                         <Select
-                                            disabled={!filter?.street}
+                                            disabled={disableBuildingSelect()}
                                             showSearch={true}
+                                            value={selectedBuilding}
                                             filterOption={(input, option) =>
                                                 (option?.label ?? '')
                                                     .toLowerCase()

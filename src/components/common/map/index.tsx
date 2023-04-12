@@ -95,7 +95,6 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                 if (mapRef) {
                     mapRef.flyTo(newCenter, 17);
                 }
-                // const marker = markerref.current;
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

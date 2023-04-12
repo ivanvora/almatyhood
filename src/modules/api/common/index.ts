@@ -52,6 +52,13 @@ export class Common extends AClientFacade {
         });
     }
 
+    getBuildingByKadastr(number: string, signal?: GenericAbortSignal) {
+        return this.instance.get<TBuilding[]>(endpoints.common.getBuildingByKadastr, {
+            signal,
+            params: { number },
+        });
+    }
+
     getDistricts() {
         return this.instance.get<TDistrict[]>(endpoints.common.getDistricts);
     }
