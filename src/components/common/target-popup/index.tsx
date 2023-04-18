@@ -1,6 +1,7 @@
 import React from 'react';
 import { HeartOutlined, RightOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 import { Button } from 'antd';
 
@@ -23,6 +24,8 @@ export type TProps = {
 
 export function TargetPopup({ district, street, type, year, number, fid }: TProps) {
     const dispatch = useAppDispatch();
+
+    const router = useRouter();
     const { likes } = useAppSelector((s) => s.likesReducer);
 
     const isLiked = () => {
@@ -79,7 +82,11 @@ export function TargetPopup({ district, street, type, year, number, fid }: TProp
                     icon={<HeartOutlined />}
                     onClick={() => switchLike()}
                 />
-                <Button type='primary' icon={<RightOutlined />} />
+                <Button
+                    type='primary'
+                    onClick={() => router.push(`/details?id=${fid}`)}
+                    icon={<RightOutlined />}
+                />
             </div>
         </div>
     );

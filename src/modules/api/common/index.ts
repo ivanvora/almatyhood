@@ -29,7 +29,7 @@ export class Common extends AClientFacade {
     }
 
     getBuildingById(id: number) {
-        return this.instance.get(endpoints.common.getBuildingById(id));
+        return this.instance.get<TBuilding[]>(endpoints.common.getBuildingById(id));
     }
 
     getStreets(id: number) {
