@@ -25,6 +25,8 @@ export type TBuilding = {
     snosCompany?: string;
     district_fid?: number;
     district_name?: string;
+    area?: number;
+    build_type?: string;
 };
 
 export type TResponse = {

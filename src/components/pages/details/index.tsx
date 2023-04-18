@@ -19,16 +19,16 @@ import styles from './details.module.css';
 
 const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
 
-const mock: TBuilding = {
-    year: 1958,
-    appartments: 120,
-    fullNameStr: 'Медеуский район, ул. Манаса. 154 А',
-    floor: 5,
-    number: '3',
-};
+// const mock: TBuilding = {
+//     year: 1958,
+//     appartments: 120,
+//     fullNameStr: 'Медеуский район, ул. Манаса. 154 А',
+//     floor: 5,
+//     number: '3',
+// };
 
 export const DetailsPage = () => {
-    const [building, setBuilding] = useState<TBuilding>(mock);
+    const [building, setBuilding] = useState<TBuilding>();
 
     const router = useRouter();
     const { id } = router.query;
@@ -101,8 +101,11 @@ export const DetailsPage = () => {
                             <div className={styles.stats}>
                                 <InfoRow data={building?.year ?? ''} title='Период постройки' />
                                 <InfoRow data={building?.floor ?? ''} title='Этажность' />
-                                <InfoRow data={building?.klVz ?? ''} title='Тип эксплуатаций' />
-                                <InfoRow data={building?.number ?? ''} title='Площадь' />
+                                <InfoRow
+                                    data={building?.build_type ?? ''}
+                                    title='Тип эксплуатаций'
+                                />
+                                <InfoRow data={`${building?.area ?? ''} м2`} title='Площадь' />
                                 <InfoRow
                                     data={building?.appartments ?? ''}
                                     title='Кол-во квартир'
