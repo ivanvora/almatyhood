@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Carousel } from 'react-responsive-carousel';
 import { ArrowLeftOutlined, HeartOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
@@ -94,7 +95,11 @@ export const DetailsPage = () => {
                 <Plate className={styles.plate}>
                     <div className={styles.data}>
                         <div className={styles['pic-container']}>
-                            <div className={styles.pic} />
+                            <Carousel className={styles.carusel} showThumbs={false}>
+                                <div key={0} className={styles.pic} />
+                                <div key={1} className={styles.pic} />
+                                <div key={2} className={styles.pic} />
+                            </Carousel>
                         </div>
                         <div className={styles['main-info']}>
                             <Typography.Title>{building?.fullNameStr ?? ''}</Typography.Title>

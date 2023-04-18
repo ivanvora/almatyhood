@@ -10,6 +10,7 @@ import { ConfigProvider } from 'antd';
 import { purpletheme, theme } from '@/modules/configs/ant';
 import { store } from '@/modules/redux';
 
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import '../styles/global.css';
 
 function MyApp({ Component, pageProps }: AppProps) {

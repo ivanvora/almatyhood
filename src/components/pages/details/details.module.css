@@ -21,16 +21,18 @@
 }
 
 .pic-container{
-    flex-basis: 50%;
+    flex-basis: 45%;
 }
 
 .pic{
     background-image: url('../../../assets/Rectangle\ 12.png');
     background-repeat: no-repeat;
     background-size: contain;
-    height: 100%;
+    background-position: center bottom;
+    height: calc(100vh - 190px);
     width: 100%;
 }
+
 .main-info{
     display: flex;
     flex-direction: column;
@@ -51,6 +53,6 @@
 }
 .favor{
     position: absolute;
-    right: 81px;
+    right: 38px;
     top: 131px;
 }
