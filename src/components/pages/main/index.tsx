@@ -169,11 +169,9 @@ export const Main = () => {
                     }))}
                 />
             </div>
-            <Button
-                icon={<BarChartOutlined />}
-                style={{ marginRight: '10px' }}
-                onClick={() => router.push('/metrics')}
-            />
+            <div>
+                <Button icon={<BarChartOutlined />} onClick={() => router.push('/metrics')} />
+            </div>
         </div>
     );
 

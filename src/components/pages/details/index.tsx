@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
-import { ArrowLeftOutlined, HeartOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -30,13 +30,21 @@ const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
 
 export const DetailsPage = () => {
     const [building, setBuilding] = useState<TBuilding>();
+    const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
     const { id } = router.query;
 
     useEffect(() => {
         if (id) {
-            client.common.getBuildingById(+id).then((res) => setBuilding(res.data[0]));
+            setIsLoading(true);
+            client.common
+                .getBuildingById(+id)
+                .then((res) => {
+                    setBuilding(res.data[0]);
+                    setIsLoading(false);
+                })
+                .catch(() => setIsLoading(false));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -81,6 +89,45 @@ export const DetailsPage = () => {
         }
     };
 
+    const mainContent = (
+        <React.Fragment>
+            <div className={styles.data}>
+                <div className={styles['pic-container']}>
+                    <Carousel
+                        statusFormatter={() => ''}
+                        className={styles.carusel}
+                        showThumbs={false}
+                    >
+                        <div key={0} className={styles.pic} />
+                        <div key={1} className={styles.pic} />
+                        <div key={2} className={styles.pic} />
+                    </Carousel>
+                </div>
+                <div className={styles['main-info']}>
+                    <Typography.Title>{building?.fullNameStr ?? ''}</Typography.Title>
+                    <div className={styles.stats}>
+                        <InfoRow data={building?.year ?? ''} title='Период постройки' />
+                        <InfoRow data={building?.floor ?? ''} title='Этажность' />
+                        <InfoRow data={building?.build_type ?? ''} title='Тип эксплуатаций' />
+                        <InfoRow data={`${building?.area ?? ''} м2`} title='Площадь' />
+                        <InfoRow data={building?.appartments ?? ''} title='Кол-во квартир' />
+                        <InfoRow data={building?.pdp ?? ''} title='Программа:' />
+                    </div>
+                    <div>
+                        <Typography.Title level={3}>Документы</Typography.Title>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.favor}>
+                <Button
+                    type={isLiked() ? 'primary' : 'default'}
+                    onClick={() => switchLike()}
+                    icon={<HeartOutlined />}
+                />
+            </div>
+        </React.Fragment>
+    );
+
     return (
         <React.Fragment>
             <Map preload={false} />
@@ -93,42 +140,13 @@ export const DetailsPage = () => {
                     </div>
                 </Top>
                 <Plate className={styles.plate}>
-                    <div className={styles.data}>
-                        <div className={styles['pic-container']}>
-                            <Carousel className={styles.carusel} showThumbs={false}>
-                                <div key={0} className={styles.pic} />
-                                <div key={1} className={styles.pic} />
-                                <div key={2} className={styles.pic} />
-                            </Carousel>
+                    {isLoading ? (
+                        <div className={styles.loader}>
+                            <LoadingOutlined style={{ fontSize: '72px' }} />
                         </div>
-                        <div className={styles['main-info']}>
-                            <Typography.Title>{building?.fullNameStr ?? ''}</Typography.Title>
-                            <div className={styles.stats}>
-                                <InfoRow data={building?.year ?? ''} title='Период постройки' />
-                                <InfoRow data={building?.floor ?? ''} title='Этажность' />
-                                <InfoRow
-                                    data={building?.build_type ?? ''}
-                                    title='Тип эксплуатаций'
-                                />
-                                <InfoRow data={`${building?.area ?? ''} м2`} title='Площадь' />
-                                <InfoRow
-                                    data={building?.appartments ?? ''}
-                                    title='Кол-во квартир'
-                                />
-                                <InfoRow data={building?.pdp ?? ''} title='Программа:' />
-                            </div>
-                            <div>
-                                <Typography.Title level={3}>Документы</Typography.Title>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.favor}>
-                        <Button
-                            type={isLiked() ? 'primary' : 'default'}
-                            onClick={() => switchLike()}
-                            icon={<HeartOutlined />}
-                        />
-                    </div>
+                    ) : (
+                        mainContent
+                    )}
                 </Plate>
             </div>
         </React.Fragment>

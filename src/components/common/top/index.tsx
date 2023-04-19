@@ -21,7 +21,9 @@ export const Top = ({ children }: TProps) => {
                 <Logo />
             </div>
             {children}
-            <Button icon={<LogoutOutlined />} onClick={() => router.push('/')} />
+            <div>
+                <Button icon={<LogoutOutlined />} onClick={() => router.push('/')} />
+            </div>
         </div>
     );
 };

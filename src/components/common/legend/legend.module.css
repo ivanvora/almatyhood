@@ -8,13 +8,14 @@
 }
 .title{
     font-size: small;
-    color:black;
+    color:rgb(114, 112, 112);
     font-family: 'Montserrat','Roboto', sans-serif;
-    font-size: 0.7rem;
+    font-size: 1vw;
     font-weight: 500;
     line-height: 10px;
     margin-bottom: 5px;
+    line-height: normal;
 }
 .big-title{
-    font-size: 1rem;
+    font-size: 1.2vw;
 }

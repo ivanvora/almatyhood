@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { GlobalOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
-import { Button, Input, Select, Slider, Typography } from 'antd';
+import { Button, Collapse, Input, Select, Slider, Typography } from 'antd';
 
 import { client } from '@/modules/api';
 import { DISTRICTS_MAP } from '@/modules/dictionary';
@@ -21,10 +21,13 @@ import Legend from '../legend';
 import { Plate } from '../plate';
 import { Top } from '../top';
 
+import { HomeStat } from './home-stat';
 import { StatProgress } from './stat-progress';
 import { StatRow } from './stat-row';
 
 import styles from './district-stat-modal.module.css';
+
+const { Panel } = Collapse;
 
 type TDistrict = keyof typeof DISTRICTS_MAP;
 
@@ -89,14 +92,14 @@ export const DistrictStat = () => {
     const createSelectOptions = () => {
         if (data && data.gisBuildings && filter.districtId && currentFilter === 'main') {
             return data?.gisBuildings?.map((item) => ({
-                value: item.gid,
+                value: item.fid,
                 label: item.fullNameStr,
             }));
         }
 
         if (kadastrData && currentFilter === 'kadastr') {
             return kadastrData?.map((item) => ({
-                value: item.gid,
+                value: item.fid,
                 label: item.fullNameStr,
             }));
         }
@@ -190,7 +193,13 @@ export const DistrictStat = () => {
                                 {districtName}
                             </Typography.Title>
                             <div className={styles['district-filter']}>
-                                <Plate style={{ padding: '1rem' }}>
+                                <Plate
+                                    style={{
+                                        padding: '1rem',
+                                        height: 'fit-content',
+                                        zIndex: '9999',
+                                    }}
+                                >
                                     <div className={styles['district-filter_panel']}>
                                         <Legend bigTitle={true} title='Период постройки'>
                                             <div
@@ -223,40 +232,48 @@ export const DistrictStat = () => {
                                                 }
                                             />
                                         </Legend>
-                                        <Input
-                                            placeholder='Кадастровый №'
-                                            value={kadastr}
-                                            onChange={(e) => setKadastr(e.currentTarget.value)}
-                                        />
-                                        <Select
-                                            disabled={!filter?.districtId}
-                                            showSearch={true}
-                                            value={filter?.street}
-                                            placeholder='Улица'
-                                            onSelect={(e) => {
-                                                setFilter((s) => ({ ...s, street: e }));
-                                                setSelectedBuilding(undefined);
-                                            }}
-                                            options={createStreetsOptions()}
-                                            filterOption={(input, option) =>
-                                                (option?.label ?? '')
-                                                    .toLowerCase()
-                                                    .includes(input.toLowerCase())
-                                            }
-                                        />
-                                        <Select
-                                            disabled={disableBuildingSelect()}
-                                            showSearch={true}
-                                            value={selectedBuilding}
-                                            filterOption={(input, option) =>
-                                                (option?.label ?? '')
-                                                    .toLowerCase()
-                                                    .includes(input.toLowerCase())
-                                            }
-                                            onSelect={(val) => setSelectedBuilding(val)}
-                                            options={createSelectOptions()}
-                                            placeholder='Дом'
-                                        />
+                                        <Collapse>
+                                            <Panel header='фильтры' key='1'>
+                                                <div className={styles.filters}>
+                                                    <Input
+                                                        placeholder='Кадастровый №'
+                                                        value={kadastr}
+                                                        onChange={(e) =>
+                                                            setKadastr(e.currentTarget.value)
+                                                        }
+                                                    />
+                                                    <Select
+                                                        disabled={!filter?.districtId}
+                                                        showSearch={true}
+                                                        value={filter?.street}
+                                                        placeholder='Улица'
+                                                        onSelect={(e) => {
+                                                            setFilter((s) => ({ ...s, street: e }));
+                                                            setSelectedBuilding(undefined);
+                                                        }}
+                                                        options={createStreetsOptions()}
+                                                        filterOption={(input, option) =>
+                                                            (option?.label ?? '')
+                                                                .toLowerCase()
+                                                                .includes(input.toLowerCase())
+                                                        }
+                                                    />
+                                                    <Select
+                                                        disabled={disableBuildingSelect()}
+                                                        showSearch={true}
+                                                        value={selectedBuilding}
+                                                        filterOption={(input, option) =>
+                                                            (option?.label ?? '')
+                                                                .toLowerCase()
+                                                                .includes(input.toLowerCase())
+                                                        }
+                                                        onSelect={(val) => setSelectedBuilding(val)}
+                                                        options={createSelectOptions()}
+                                                        placeholder='Дом'
+                                                    />
+                                                </div>
+                                            </Panel>
+                                        </Collapse>
                                     </div>
                                 </Plate>
                                 <div className={styles.types}>
@@ -286,22 +303,30 @@ export const DistrictStat = () => {
                     {selectedBuilding && (
                         <Plate className={styles['right-plate']}>
                             <div className={styles.current}>
-                                <div className={styles['current-stats']}>
-                                    <StatRow
-                                        data={currentBuilding?.year ?? ''}
-                                        title='Период постройки'
-                                    />
-                                    <StatRow data='' title='Площадь' />
-                                    <StatRow
-                                        data={currentBuilding?.floor ?? ''}
-                                        title='Этажность'
-                                    />
-                                    <StatRow
-                                        data={currentBuilding?.appartments ?? ''}
-                                        title='Кол-во квартир'
-                                    />
-                                    <StatRow data='' title='Тип эксплуатаций' />
-                                    <StatRow data='' title='Входит в программу:' />
+                                <div className={styles['home-stats']}>
+                                    <Typography.Title style={{ marginTop: 0 }} level={4}>
+                                        {currentBuilding?.fullNameStr}
+                                    </Typography.Title>
+                                    <div className={styles['current-stats']}>
+                                        <HomeStat
+                                            data={currentBuilding?.year ?? ''}
+                                            title='Период постройки'
+                                        />
+                                        <HomeStat
+                                            data={currentBuilding?.area ?? ''}
+                                            title='Площадь'
+                                        />
+                                        <HomeStat
+                                            data={currentBuilding?.floor ?? ''}
+                                            title='Этажность'
+                                        />
+                                        <HomeStat
+                                            data={currentBuilding?.appartments ?? ''}
+                                            title='Кол-во квартир'
+                                        />
+                                        <HomeStat data='' title='Тип эксплуатаций' />
+                                        <HomeStat data='' title='Входит в программу:' />
+                                    </div>
                                 </div>
                                 <div className={styles.pic} />
                             </div>
