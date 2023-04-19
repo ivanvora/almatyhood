@@ -13,12 +13,13 @@ type Props = {
 export default function Legend({ title, children, isSubTitle, style, bigTitle }: Props) {
     return (
         <div
-            style={style}
             className={`${styles.body} 
             ${isSubTitle ? styles['sub-title'] : ''} 
             `}
         >
-            <div className={`${styles.title} ${bigTitle ? styles['big-title'] : ''}`}>{title}</div>
+            <div style={style} className={`${styles.title} ${bigTitle ? styles['big-title'] : ''}`}>
+                {title}
+            </div>
             {children}
         </div>
     );

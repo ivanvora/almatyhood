@@ -31,7 +31,7 @@ const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
 export const DetailsPage = () => {
     const [building, setBuilding] = useState<TBuilding>();
     const [isLoading, setIsLoading] = useState(false);
-
+    const [isLiked, setIsLiked] = useState(false);
     const router = useRouter();
     const { id } = router.query;
 
@@ -51,15 +51,14 @@ export const DetailsPage = () => {
     const dispatch = useAppDispatch();
     const { likes } = useAppSelector((s) => s.likesReducer);
 
-    const isLiked = () => {
+    useEffect(() => {
         if (likes && likes.length > 0) {
             const l = likes?.find((i) => i.fid === id);
 
-            return l !== undefined && l?.fid === id;
+            setIsLiked(l !== undefined && l?.fid === id);
         }
-
-        return false;
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [likes]);
 
     const likeOperators = {
         addLike: (userid: number, fid: number) => {
@@ -80,10 +79,10 @@ export const DetailsPage = () => {
         const userid = Cookies.get('userId');
 
         if (userid && id) {
-            if (isLiked()) {
+            if (isLiked) {
                 likeOperators.removeLike(+userid, +id);
             }
-            if (!isLiked()) {
+            if (!isLiked) {
                 likeOperators.addLike(+userid, +id);
             }
         }
@@ -120,7 +119,7 @@ export const DetailsPage = () => {
             </div>
             <div className={styles.favor}>
                 <Button
-                    type={isLiked() ? 'primary' : 'default'}
+                    type={isLiked ? 'primary' : 'default'}
                     onClick={() => switchLike()}
                     icon={<HeartOutlined />}
                 />

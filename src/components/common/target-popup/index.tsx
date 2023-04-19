@@ -70,11 +70,21 @@ export function TargetPopup({ district, street, type, year, number, fid }: TProp
         <div className={styles.body}>
             <div className={styles.pic} />
             <div className={styles.data}>
-                <Legend title='Период постройки'>{year}</Legend>
-                <Legend title='Район'>{district}</Legend>
-                <Legend title='Улица'>{street}</Legend>
-                <Legend title='Номер'>{number}</Legend>
-                <Legend title='Тип эксплуатаций'>{type}</Legend>
+                <Legend style={{ fontSize: '1.3vh' }} title='Период постройки'>
+                    {year}
+                </Legend>
+                <Legend style={{ fontSize: '1.3vh' }} title='Район'>
+                    {district}
+                </Legend>
+                <Legend style={{ fontSize: '1.3vh' }} title='Улица'>
+                    {street}
+                </Legend>
+                <Legend style={{ fontSize: '1.3vh' }} title='Номер'>
+                    {number}
+                </Legend>
+                <Legend style={{ fontSize: '1.3vh' }} title='Тип эксплуатаций'>
+                    {type}
+                </Legend>
             </div>
             <div className={styles.control}>
                 <Button
