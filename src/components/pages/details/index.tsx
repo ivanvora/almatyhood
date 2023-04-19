@@ -46,8 +46,8 @@ export const DetailsPage = () => {
                 })
                 .catch(() => setIsLoading(false));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id]);
+
     const dispatch = useAppDispatch();
     const { likes } = useAppSelector((s) => s.likesReducer);
 

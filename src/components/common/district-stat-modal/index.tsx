@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { GlobalOutlined } from '@ant-design/icons';
+import { GlobalOutlined, RightOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
 import { Button, Collapse, Input, Select, Slider, Typography } from 'antd';
@@ -233,7 +233,7 @@ export const DistrictStat = () => {
                                             />
                                         </Legend>
                                         <Collapse>
-                                            <Panel header='фильтры' key='1'>
+                                            <Panel header='Фильтры' key='1'>
                                                 <div className={styles.filters}>
                                                     <Input
                                                         placeholder='Кадастровый №'
@@ -313,7 +313,7 @@ export const DistrictStat = () => {
                                             title='Период постройки'
                                         />
                                         <HomeStat
-                                            data={currentBuilding?.area ?? ''}
+                                            data={`${currentBuilding?.area ?? 0} м2`}
                                             title='Площадь'
                                         />
                                         <HomeStat
@@ -329,6 +329,15 @@ export const DistrictStat = () => {
                                     </div>
                                 </div>
                                 <div className={styles.pic} />
+                                <div className={styles['details-button']}>
+                                    <Button
+                                        onClick={() =>
+                                            router.push(`/details?id=${currentBuilding?.fid}`)
+                                        }
+                                        type='primary'
+                                        icon={<RightOutlined />}
+                                    />
+                                </div>
                             </div>
                         </Plate>
                     )}
