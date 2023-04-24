@@ -216,11 +216,9 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
             ref={setMapRef}
         >
             {selectedBuildingLL ? (
-                <Marker ref={setMarkerRef} position={selectedBuildingLL}>
-                    <LPopup>
-                        <TargetPopup {...selectedFeature} />
-                    </LPopup>
-                </Marker>
+                <LPopup ref={setMarkerRef} position={selectedBuildingLL}>
+                    <TargetPopup {...selectedFeature} />
+                </LPopup>
             ) : null}
             <Popup {...selectedFeature} />
             {isRedLines && (
