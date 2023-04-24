@@ -9,7 +9,6 @@ import { Button, Input, Select } from 'antd';
 
 import { HouseOption } from '@/components/common/house-option';
 import { HouseSelector } from '@/components/common/house-selector';
-import { Clock } from '@/components/common/icons/clock';
 import { LayersButton } from '@/components/common/layers-button';
 import { Top } from '@/components/common/top';
 import { client } from '@/modules/api';
@@ -117,9 +116,6 @@ export const Main = () => {
                         value: i.fid ? i.fid.toString(10) : '',
                     }))}
                 />
-                <Button className={styles.clock}>
-                    <Clock />
-                </Button>
                 <Input
                     style={{ width: '300px', height: '30px' }}
                     type='primary'
