@@ -15,5 +15,8 @@ export const purpletheme: ThemeConfig = {
         margin: 10,
     },
 
-    components: { Slider: { railSize: 10, handleSize: 15, handleSizeHover: 20 } },
+    components: {
+        Slider: { railSize: 10, handleSize: 15, handleSizeHover: 20 },
+        Select: { colorTextPlaceholder: 'lightgrey' },
+    },
 };
