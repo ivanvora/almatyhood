@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { GlobalOutlined, RightOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
-import { Button, Collapse, Input, Select, Slider, Typography } from 'antd';
+import { Button, Input, Select, Slider, Typography } from 'antd';
 
 import { client } from '@/modules/api';
 import { DISTRICTS_MAP } from '@/modules/dictionary';
@@ -27,7 +27,7 @@ import { StatRow } from './stat-row';
 
 import styles from './district-stat-modal.module.css';
 
-const { Panel } = Collapse;
+// const { Panel } = Collapse;
 
 type TDistrict = keyof typeof DISTRICTS_MAP;
 
