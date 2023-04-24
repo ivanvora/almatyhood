@@ -5,6 +5,7 @@
 }
 .sub-title{
     flex-direction: column-reverse;
+    justify-content: flex-end;
 }
 .title{
     font-size: small;

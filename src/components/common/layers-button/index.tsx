@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 
 import { Button } from 'antd';
 
@@ -37,17 +37,15 @@ export const LayersButton = ({
     const [isWaterGuardZone, setIsWaterGuardZone] = useState(false);
     const [isWaterGuardStrip, setIsWaterGuardStrip] = useState(false);
 
+    const style: CSSProperties = { textAlign: 'center', fontSize: '9px' };
+
     return (
         <div className={styles.body}>
             <Button className={styles.layers}>
                 <LayersIcon color='black' />
             </Button>
             <div className={styles.menu}>
-                <Legend
-                    title='Границы'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Границы' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsBorders((s) => !s);
@@ -58,11 +56,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend
-                    title='Районы'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Районы' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsDistricts((s) => !s);
@@ -73,11 +67,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend
-                    title='Красные линии'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Красные линии' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsRedlines((s) => !s);
@@ -88,11 +78,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend
-                    title='Озера'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Озера' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsLakes((s) => !s);
@@ -103,11 +89,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend
-                    title='Реки'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Реки' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsRivers((s) => !s);
@@ -118,11 +100,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend
-                    title='Водоохранная зона'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Водоохранная зона' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsWaterGuardZone((s) => !s);
@@ -133,11 +111,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend
-                    title='Водоохранная полоса'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Водоохранная полоса' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsWaterGuardStrip((s) => !s);
@@ -148,11 +122,7 @@ export const LayersButton = ({
                         }`}
                     />
                 </Legend>
-                <Legend
-                    title='Сейсмо'
-                    style={{ textAlign: 'center', alignSelf: 'flex-start' }}
-                    isSubTitle={true}
-                >
+                <Legend title='Сейсмо' style={style} isSubTitle={true}>
                     <Button
                         onClick={() => {
                             setIsSeismo((s) => !s);

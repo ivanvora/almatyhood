@@ -206,15 +206,15 @@ export const DistrictStat = () => {
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
-                                                    marginTop: '10px',
+                                                    marginTop: '1vh',
                                                 }}
                                             >
                                                 <Legend
-                                                    bigTitle={true}
+                                                    bigTitle={false}
                                                     title={`${periodFilter[0]} год`}
                                                 />
                                                 <Legend
-                                                    bigTitle={true}
+                                                    bigTitle={false}
                                                     title={`${periodFilter[1]} год`}
                                                 />
                                             </div>
@@ -232,48 +232,43 @@ export const DistrictStat = () => {
                                                 }
                                             />
                                         </Legend>
-                                        <Collapse>
-                                            <Panel header='Фильтры' key='1'>
-                                                <div className={styles.filters}>
-                                                    <Input
-                                                        placeholder='Кадастровый №'
-                                                        value={kadastr}
-                                                        onChange={(e) =>
-                                                            setKadastr(e.currentTarget.value)
-                                                        }
-                                                    />
-                                                    <Select
-                                                        disabled={!filter?.districtId}
-                                                        showSearch={true}
-                                                        value={filter?.street}
-                                                        placeholder='Улица'
-                                                        onSelect={(e) => {
-                                                            setFilter((s) => ({ ...s, street: e }));
-                                                            setSelectedBuilding(undefined);
-                                                        }}
-                                                        options={createStreetsOptions()}
-                                                        filterOption={(input, option) =>
-                                                            (option?.label ?? '')
-                                                                .toLowerCase()
-                                                                .includes(input.toLowerCase())
-                                                        }
-                                                    />
-                                                    <Select
-                                                        disabled={disableBuildingSelect()}
-                                                        showSearch={true}
-                                                        value={selectedBuilding}
-                                                        filterOption={(input, option) =>
-                                                            (option?.label ?? '')
-                                                                .toLowerCase()
-                                                                .includes(input.toLowerCase())
-                                                        }
-                                                        onSelect={(val) => setSelectedBuilding(val)}
-                                                        options={createSelectOptions()}
-                                                        placeholder='Дом'
-                                                    />
-                                                </div>
-                                            </Panel>
-                                        </Collapse>
+                                        <Input
+                                            size='small'
+                                            placeholder='Кадастровый №'
+                                            value={kadastr}
+                                            onChange={(e) => setKadastr(e.currentTarget.value)}
+                                        />
+                                        <Select
+                                            size='small'
+                                            disabled={!filter?.districtId}
+                                            showSearch={true}
+                                            value={filter?.street}
+                                            placeholder='Улица'
+                                            onSelect={(e) => {
+                                                setFilter((s) => ({ ...s, street: e }));
+                                                setSelectedBuilding(undefined);
+                                            }}
+                                            options={createStreetsOptions()}
+                                            filterOption={(input, option) =>
+                                                (option?.label ?? '')
+                                                    .toLowerCase()
+                                                    .includes(input.toLowerCase())
+                                            }
+                                        />
+                                        <Select
+                                            size='small'
+                                            disabled={disableBuildingSelect()}
+                                            showSearch={true}
+                                            value={selectedBuilding}
+                                            filterOption={(input, option) =>
+                                                (option?.label ?? '')
+                                                    .toLowerCase()
+                                                    .includes(input.toLowerCase())
+                                            }
+                                            onSelect={(val) => setSelectedBuilding(val)}
+                                            options={createSelectOptions()}
+                                            placeholder='Дом'
+                                        />
                                     </div>
                                 </Plate>
                                 <div className={styles.types}>
