@@ -5,14 +5,14 @@ import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
-import { Button, Input, Select } from 'antd';
+import { Button, Select, SelectProps } from 'antd';
 
 import { HouseOption } from '@/components/common/house-option';
 import { HouseSelector } from '@/components/common/house-selector';
 import { LayersButton } from '@/components/common/layers-button';
 import { Top } from '@/components/common/top';
 import { client } from '@/modules/api';
-import { useAxiosErrorHandle } from '@/modules/hooks';
+import { useAxiosErrorHandle, useSearch } from '@/modules/hooks';
 import { TBuilding, TDistrict, TFilterBuildingQuery, TStreet } from '@/modules/models/common';
 // import Map from '@/components/common/map';
 import { TLayer } from '@/modules/models/map';
@@ -30,6 +30,9 @@ export const Main = () => {
     const [districts, setDistricts] = useState<TDistrict[]>();
     const [buildings, setBuildings] = useState<TBuilding[]>();
     const [isBuildingsLoading, setIsBuildingsLoading] = useState(false);
+    const [searchText, setSearchText] = useState('');
+    const [searchOptions, setSearchOptions] = useState<SelectProps<object>['options']>([]);
+    const [searchSelected, setSearchSelected] = useState<any>();
 
     const [selectedBuilding, setSelectedBuilding] = useState<number>();
     const [streets, setStreets] = useState<TStreet[]>();
@@ -40,6 +43,23 @@ export const Main = () => {
 
     const router = useRouter();
     const { isLoading: isloadingLikes, likes } = useAppSelector((s) => s.likesReducer);
+
+    const { data, isLoading } = useSearch(searchText);
+
+    useEffect(() => {
+        if (searchSelected) {
+            setSelectedBuilding(searchSelected);
+        }
+    }, [searchSelected]);
+
+    useEffect(() => {
+        setSearchOptions(
+            data?.map((item) => ({
+                label: item.fullNameStr,
+                value: item.fid,
+            })),
+        );
+    }, [data]);
 
     useEffect(() => {
         client.common
@@ -116,9 +136,15 @@ export const Main = () => {
                         value: i.fid ? i.fid.toString(10) : '',
                     }))}
                 />
-                <Input
+                <Select
+                    showSearch={true}
+                    onSearch={(v) => setSearchText(v)}
+                    value={searchSelected}
+                    onChange={(v) => setSearchSelected(v)}
+                    options={searchOptions}
+                    filterOption={false}
+                    notFoundContent={isLoading ? <LoadingOutlined /> : null}
                     style={{ width: '300px', height: '30px' }}
-                    type='primary'
                     placeholder='Текст...'
                 />
             </div>
@@ -155,7 +181,7 @@ export const Main = () => {
                 <HouseSelector
                     disbled={!filter?.street}
                     isLoading={isBuildingsLoading}
-                    placeholder='дом'
+                    placeholder='Дом'
                     value={selectedBuilding?.toString()}
                     onSelectedItem={(v) => setSelectedBuilding(+v)}
                     options={buildings?.map((i) => ({

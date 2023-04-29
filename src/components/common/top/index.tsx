@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { LogoutOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
 import { Button } from 'antd';
@@ -14,6 +14,7 @@ export type TProps = {
 
 export const Top = ({ children }: TProps) => {
     const router = useRouter();
+    const currentUrl = router.route;
 
     return (
         <div id='ddd' className={styles['top-backlayer']}>
@@ -21,7 +22,17 @@ export const Top = ({ children }: TProps) => {
                 <Logo />
             </div>
             {children}
-            <div>
+            <div style={{ display: 'flex', gap: '6px' }}>
+                <Button
+                    icon={currentUrl === '/profile' ? <ArrowLeftOutlined /> : <UserOutlined />}
+                    onClick={() => {
+                        if (currentUrl === '/profile') {
+                            router.back();
+                        } else {
+                            router.push('/profile');
+                        }
+                    }}
+                />
                 <Button icon={<LogoutOutlined />} onClick={() => router.push('/')} />
             </div>
         </div>

@@ -59,6 +59,13 @@ export class Common extends AClientFacade {
         });
     }
 
+    search(streetName: string, signal?: GenericAbortSignal) {
+        return this.instance.get<TBuilding[]>(endpoints.common.search, {
+            signal,
+            params: { streetName },
+        });
+    }
+
     getDistricts() {
         return this.instance.get<TDistrict[]>(endpoints.common.getDistricts);
     }

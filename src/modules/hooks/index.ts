@@ -130,3 +130,40 @@ export const useGetBuildingsByKadastr = (number: string) => {
 
     return { data, isLoading };
 };
+
+export const useSearch = (streetName: string) => {
+    const [data, setData] = useState<TBuilding[]>();
+    const [F, setF] = useState<string>();
+    const [isLoading, setIsLoading] = useState(false);
+    const axiosErrorHandler = useAxiosErrorHandle();
+
+    useEffect(() => {
+        setF(streetName);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [streetName]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        if (F) {
+            setIsLoading(true);
+            client.common
+                .search(F, controller.signal)
+                .then(({ data }) => {
+                    setData(data);
+                    setIsLoading(false);
+                })
+                .catch((err) => {
+                    axiosErrorHandler(err);
+                    setIsLoading(false);
+                });
+        }
+
+        return () => {
+            controller.abort();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [F]);
+
+    return { data, isLoading };
+};
