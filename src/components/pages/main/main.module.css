@@ -31,3 +31,9 @@
 .top-control{
     display: flex;
 }
+.left-controll-panel{
+    position: absolute;
+    z-index: 9999;
+    bottom: 90px;
+    right: 10px;
+}

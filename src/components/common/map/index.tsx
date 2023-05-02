@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     GeoJSON,
     MapContainer,
-    Marker,
     Popup as LPopup,
     TileLayer,
     WMSTileLayer,
@@ -34,6 +33,7 @@ type Props = {
     layers?: TLayer[];
     featureId?: number | string;
     preload?: boolean;
+    isSatelite?: boolean;
 };
 
 const GJstyles = {
@@ -45,7 +45,7 @@ const GJstyles = {
     gis_boundary: boundaryStyle,
 };
 
-const Map = ({ layers, featureId, preload = true }: Props) => {
+const Map = ({ layers, featureId, preload = true, isSatelite = false }: Props) => {
     const position: LatLngExpression = [43.25667, 76.92861];
     const [markerref, setMarkerRef] = useState<any>();
 
@@ -228,7 +228,7 @@ const Map = ({ layers, featureId, preload = true }: Props) => {
                     {...WMSProps}
                 />
             )}
-            <TileLayer url={envs.API.WORLD_MAP} />
+            <TileLayer url={isSatelite ? envs.API.WORLD_SATELITE_MAP : envs.API.WORLD_MAP} />
             {drawBackwardLayers()}
             {buildings ? (
                 <GeoJSON

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { BarChartOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
+import { BarChartOutlined, CloudOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -33,6 +33,7 @@ export const Main = () => {
     const [searchText, setSearchText] = useState('');
     const [searchOptions, setSearchOptions] = useState<SelectProps<object>['options']>([]);
     const [searchSelected, setSearchSelected] = useState<any>();
+    const [isSateliteMap, setIsSateligteMap] = useState(false);
 
     const [selectedBuilding, setSelectedBuilding] = useState<number>();
     const [streets, setStreets] = useState<TStreet[]>();
@@ -138,6 +139,7 @@ export const Main = () => {
                 />
                 <Select
                     showSearch={true}
+                    showArrow={false}
                     onSearch={(v) => setSearchText(v)}
                     value={searchSelected}
                     onChange={(v) => setSearchSelected(v)}
@@ -199,7 +201,10 @@ export const Main = () => {
 
     return (
         <React.Fragment>
-            <Map layers={layers} featureId={selectedBuilding} />
+            <Map isSatelite={isSateliteMap} layers={layers} featureId={selectedBuilding} />
+            <div className={styles['left-controll-panel']}>
+                <Button icon={<CloudOutlined />} onClick={() => setIsSateligteMap((s) => !s)} />
+            </div>
             <div className={styles.main}>
                 <LayersButton
                     onBordersClick={() => setLayer('gis_boundary')}
