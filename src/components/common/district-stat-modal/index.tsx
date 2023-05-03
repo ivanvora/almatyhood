@@ -111,7 +111,7 @@ export const DistrictStat = () => {
         streets?.map((item) => ({ value: item.id, label: item.street_name }));
 
     const disableBuildingSelect = () => {
-        if (currentFilter === 'kadastr') return false;
+        if (currentFilter === 'kadastr' && kadastr.length > 0) return false;
         if (currentFilter === 'main' && filter?.street) return false;
 
         return true;
@@ -145,6 +145,7 @@ export const DistrictStat = () => {
                                         range={true}
                                         min={STARTDATEF}
                                         max={ENDDATEF}
+                                        defaultValue={[STARTDATEF, ENDDATEF]}
                                         onAfterChange={(val) =>
                                             setFilterCommon((s) => ({
                                                 ...s,
@@ -223,6 +224,7 @@ export const DistrictStat = () => {
                                                 range={true}
                                                 min={periodFilter[0]}
                                                 max={periodFilter[1]}
+                                                defaultValue={periodFilter as [number, number]}
                                                 onAfterChange={(val) =>
                                                     setFilter((s) => ({
                                                         ...s,
