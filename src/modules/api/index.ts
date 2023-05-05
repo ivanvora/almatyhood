@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 
 import { envs } from '../configs/app';
 
-import { authInterceptorPair } from './security/interceptor';
+import { authInterceptorPair, errorHandlingInterceptors } from './security/interceptor';
 import { Common } from './common';
 import { Map } from './map';
 import { Security } from './security';
@@ -29,7 +29,10 @@ const instance = axios.create({
 
 const configInstance = (i: AxiosInstance) => {
     i.interceptors.request.use(authInterceptorPair.onFulfiled, authInterceptorPair.onReject);
-
+    i.interceptors.response.use(
+        errorHandlingInterceptors.onFulfiled,
+        errorHandlingInterceptors.onReject,
+    );
     return i;
 };
 

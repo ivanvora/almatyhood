@@ -1,6 +1,8 @@
-import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie';
+import Router from 'next/router';
 
 export const authInterceptorPair = {
     onFulfiled(config: InternalAxiosRequestConfig) {
@@ -16,6 +18,25 @@ export const authInterceptorPair = {
     onReject(error: AxiosError) {
         // Сделайте что-нибудь с ошибкой запроса
         console.log('error', error);
+        return Promise.reject(error);
+    },
+};
+
+export const errorHandlingInterceptors = {
+    onFulfiled(response: AxiosResponse) {
+        // Здесь можете сделать что-нибудь с перед отправкой запроса
+        console.log('resp');
+        if (response.status === 401) {
+            console.log('unauth');
+            Router.push('/');
+        }
+
+        return response;
+    },
+    onReject(error: AxiosError) {
+        // Сделайте что-нибудь с ошибкой запроса
+
+        console.log('error resp', error);
         return Promise.reject(error);
     },
 };

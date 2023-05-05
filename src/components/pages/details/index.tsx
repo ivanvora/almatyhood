@@ -133,7 +133,7 @@ export const DetailsPage = () => {
             <div className={styles.body}>
                 <Top>
                     <div className={styles.top}>
-                        <Button onClick={() => router.push('/main')} icon={<ArrowLeftOutlined />}>
+                        <Button onClick={() => router.back()} icon={<ArrowLeftOutlined />}>
                             Назад
                         </Button>
                     </div>
