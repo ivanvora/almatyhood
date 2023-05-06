@@ -1,22 +1,14 @@
 import { useEffect, useState } from 'react';
 import { AxiosError, isAxiosError } from 'axios';
-import { useRouter } from 'next/router';
 
 import { client } from '../api';
 import { TBuilding, TFilterBuildingQuery, TResponse } from '../models/common';
 
-export const useAxiosErrorHandle = () => {
-    const router = useRouter();
-
-    return (error: AxiosError | any) => {
-        console.log('error', error);
-        if (isAxiosError(error)) {
-            console.log(error.response?.status);
-            if (error.response && error.response?.status === 401) {
-                router.push('/');
-            }
-        }
-    };
+export const useAxiosErrorHandle = () => (error: AxiosError | any) => {
+    console.log('error', error);
+    if (isAxiosError(error)) {
+        console.log(error.response?.status);
+    }
 };
 
 export const useFilterBuildings = (filter: TFilterBuildingQuery) => {

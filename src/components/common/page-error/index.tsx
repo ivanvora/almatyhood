@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useRouter } from 'next/router';
 
 import { Typography } from 'antd';
@@ -11,9 +11,11 @@ import styles from './page-error.module.css';
 type Props = {
     code?: number;
     text?: string;
+    title?: string;
+    content?: ReactNode;
 };
 
-export const PageError = ({ code, text }: Props) => {
+export const PageError = ({ code, content, text = '', title = '' }: Props) => {
     const router = useRouter();
 
     return (
@@ -21,8 +23,12 @@ export const PageError = ({ code, text }: Props) => {
             <Plate className={styles.plate}>
                 <div className={styles.body}>
                     <Logo colorRevert={true} />
-                    <Typography.Title>{`${text} - (${code})`}</Typography.Title>
-                    <Typography.Link onClick={() => router.push('/')}>На главную</Typography.Link>
+                    <Typography.Title>{code}</Typography.Title>
+                    <Typography.Title level={3}>{title}</Typography.Title>
+                    <Typography.Text>{text}</Typography.Text>
+                    {content || (
+                        <Typography.Link onClick={() => router.back()}>Назад</Typography.Link>
+                    )}
                 </div>
             </Plate>
         </div>
