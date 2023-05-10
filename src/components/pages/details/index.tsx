@@ -14,6 +14,8 @@ import { TBuilding } from '@/modules/models/common';
 import { GET_LIKES } from '@/modules/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/modules/redux/hooks';
 
+import ppp from '../../../assets/house.png';
+
 import { InfoRow } from './info-row';
 
 import styles from './details.module.css';
@@ -88,6 +90,7 @@ export const DetailsPage = () => {
         }
     };
 
+    console.log(ppp.src);
     const mainContent = (
         <React.Fragment>
             <div className={styles.data}>
@@ -108,6 +111,7 @@ export const DetailsPage = () => {
                             {
                                 url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmxd77PKCsUdXysT2VKZ36ydhN9mrA-sCZHw&usqp=CAU',
                             },
+                            { url: ppp.src },
                         ]}
                         slidesPosition='bottom'
                     />
