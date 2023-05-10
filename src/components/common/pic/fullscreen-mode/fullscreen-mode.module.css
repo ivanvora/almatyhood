@@ -1,0 +1,36 @@
+.container{
+    position: fixed;
+    z-index: 99998;
+    background-color: rgba(0, 0, 0, 0.6);
+    height: 100vh;
+    width: 100vw;
+    top:0;
+    left:0;
+}
+.close{
+    z-index: 100000;
+    position: fixed;
+    height: 5vh;
+    width: 5vh;
+    top:24px;
+    right:24px;
+    cursor: pointer;
+    color:#ffffff
+}
+.pic{
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.controls{
+    z-index: 99999;
+    position: fixed;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+.controls > div{
+    flex-basis: 50%;
+}

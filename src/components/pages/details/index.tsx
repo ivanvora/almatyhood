@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Carousel } from 'react-responsive-carousel';
 import { ArrowLeftOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
@@ -7,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { Button, Typography } from 'antd';
 
+import { Pic } from '@/components/common/pic';
 import { Plate } from '@/components/common/plate';
 import { Top } from '@/components/common/top';
 import { client } from '@/modules/api';
@@ -92,15 +92,25 @@ export const DetailsPage = () => {
         <React.Fragment>
             <div className={styles.data}>
                 <div className={styles['pic-container']}>
-                    <Carousel
-                        statusFormatter={() => ''}
-                        className={styles.carusel}
-                        showThumbs={false}
-                    >
-                        <div key={0} className={styles.pic} />
-                        <div key={1} className={styles.pic} />
-                        <div key={2} className={styles.pic} />
-                    </Carousel>
+                    <Pic
+                        pics={[
+                            { url: 'https://static.kulturologia.ru/files/u23581/235810660.jpg' },
+                            { url: 'https://realt.by/uploads/pics/20210716_110758.jpg' },
+                            {
+                                url: 'https://moslenta.ru/imgs/2016/03/30/17/43532/ad22681471f418565900f356134fdeffba5f4bf0.jpg',
+                            },
+                            {
+                                url: 'https://img-fotki.yandex.ru/get/509292/33089952.b9/0_1afd8c_e67c6986_orig.jpg',
+                            },
+                            {
+                                url: 'https://aif-s3.aif.ru/images/008/125/7a4973e5d8fc6dcf329a5eba7ffd2126.jpg',
+                            },
+                            {
+                                url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmxd77PKCsUdXysT2VKZ36ydhN9mrA-sCZHw&usqp=CAU',
+                            },
+                        ]}
+                        slidesPosition='bottom'
+                    />
                 </div>
                 <div className={styles['main-info']}>
                     <Typography.Title>{building?.fullNameStr ?? ''}</Typography.Title>

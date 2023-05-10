@@ -10,3 +10,9 @@ HTML, body{
 .leaflet-popup-content{
     width: 400px !important;
 }
+
+:root {
+    --minipics-container-size:var(--minipics-container-size-m);
+    --minipics-container-size-m: 20%;
+    --minipics-container-size-s: 10%;
+}
