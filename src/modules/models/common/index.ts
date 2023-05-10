@@ -27,6 +27,8 @@ export type TBuilding = {
     district_name?: string;
     area?: number;
     build_type?: string;
+    water_zone?: boolean;
+    water_line?: boolean;
 };
 
 export type TResponse = {

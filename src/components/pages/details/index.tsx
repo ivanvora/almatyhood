@@ -125,6 +125,14 @@ export const DetailsPage = () => {
                         <InfoRow data={`${building?.area ?? ''} м2`} title='Площадь' />
                         <InfoRow data={building?.appartments ?? ''} title='Кол-во квартир' />
                         <InfoRow data={building?.pdp ?? ''} title='Программа:' />
+                        <InfoRow
+                            data={building?.water_zone ? 'да' : 'нет'}
+                            title='Водоохранная зона'
+                        />
+                        <InfoRow
+                            data={building?.water_line ? 'да' : 'нет'}
+                            title='Водоохранная полоса'
+                        />
                     </div>
                     <div>
                         <Typography.Title level={3}>Документы</Typography.Title>
