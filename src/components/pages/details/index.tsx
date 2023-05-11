@@ -133,6 +133,7 @@ export const DetailsPage = () => {
                             data={building?.water_line ? 'да' : 'нет'}
                             title='Водоохранная полоса'
                         />
+                        <InfoRow data={building?.gis_Seism?.maxrichter} title='Сейсмоактивность' />
                     </div>
                     <div>
                         <Typography.Title level={3}>Документы</Typography.Title>

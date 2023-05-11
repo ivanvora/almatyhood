@@ -29,6 +29,12 @@ export type TBuilding = {
     build_type?: string;
     water_zone?: boolean;
     water_line?: boolean;
+    gis_Seism: {
+        gis_Seismgid: number;
+        type: string;
+        maxrichter: string;
+        fault: unknown;
+    };
 };
 
 export type TResponse = {
