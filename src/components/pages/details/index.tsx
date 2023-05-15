@@ -121,19 +121,19 @@ export const DetailsPage = () => {
                     <div className={styles.stats}>
                         <InfoRow data={building?.year ?? ''} title='Период постройки' />
                         <InfoRow data={building?.floor ?? ''} title='Этажность' />
-                        <InfoRow data={building?.build_type ?? ''} title='Тип эксплуатаций' />
+                        <InfoRow data={building?.build_type ?? ''} title='Серия постройки' />
                         <InfoRow data={`${building?.area ?? ''} м2`} title='Площадь' />
                         <InfoRow data={building?.appartments ?? ''} title='Кол-во квартир' />
-                        <InfoRow data={building?.pdp ?? ''} title='Программа:' />
+                        <InfoRow data={building?.pdp ?? ''} title='Наименование ПДП:' />
                         <InfoRow
-                            data={building?.water_zone ? 'да' : 'нет'}
+                            data={building?.water_zone ? 'Пересекает' : 'Не пересекает'}
                             title='Водоохранная зона'
                         />
                         <InfoRow
-                            data={building?.water_line ? 'да' : 'нет'}
+                            data={building?.water_line ? 'Пересекает' : 'Не пересекает'}
                             title='Водоохранная полоса'
                         />
-                        <InfoRow data={building?.gis_Seism?.type} title='Сейсмоактивность' />
+                        <InfoRow data={building?.gis_Seism?.type} title='Сейсмичность' />
                     </div>
                     {/* <div>
                         <Typography.Title level={3}>Документы</Typography.Title>
