@@ -33,7 +33,7 @@ const Map = dynamic(() => import('@/components/common/map'), { ssr: false });
 export const DetailsPage = () => {
     const [building, setBuilding] = useState<TBuilding>();
     const [isLoading, setIsLoading] = useState(false);
-    const [isLiked, setIsLiked] = useState(false);
+
     const router = useRouter();
     const { id } = router.query;
 
@@ -51,16 +51,18 @@ export const DetailsPage = () => {
     }, [id]);
 
     const dispatch = useAppDispatch();
-    const { likes } = useAppSelector((s) => s.likesReducer);
+    const { likes, isLoading: isLikesLoading } = useAppSelector((s) => s.likesReducer);
 
-    useEffect(() => {
+    const isLiked = () => {
         if (likes && likes.length > 0) {
-            const l = likes?.find((i) => i.fid === id);
+            const l = likes?.find((i) => i.fid === +(id ?? '0'));
 
-            setIsLiked(l !== undefined && l?.fid === id);
+            return l !== undefined && l?.fid === +(id ?? '0');
         }
+
+        return false;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [likes]);
+    };
 
     const likeOperators = {
         addLike: (userid: number, fid: number) => {
@@ -81,10 +83,10 @@ export const DetailsPage = () => {
         const userid = Cookies.get('userId');
 
         if (userid && id) {
-            if (isLiked) {
+            if (isLiked()) {
                 likeOperators.removeLike(+userid, +id);
             }
-            if (!isLiked) {
+            if (!isLiked()) {
                 likeOperators.addLike(+userid, +id);
             }
         }
@@ -142,9 +144,10 @@ export const DetailsPage = () => {
             </div>
             <div className={styles.favor}>
                 <Button
-                    type={isLiked ? 'primary' : 'default'}
+                    type={isLiked() ? 'primary' : 'default'}
                     onClick={() => switchLike()}
-                    icon={<HeartOutlined />}
+                    disabled={isLikesLoading}
+                    icon={isLikesLoading ? <LoadingOutlined /> : <HeartOutlined />}
                 />
             </div>
         </React.Fragment>
