@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRightOutlined, HeartOutlined } from '@ant-design/icons';
+import { HeartOutlined, RightOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 import { Button } from 'antd';
 
@@ -23,6 +24,8 @@ export const HouseOption = ({ building }: Props) => {
     const { likes } = useAppSelector((s) => s.likesReducer);
 
     const [isLiked, setIsLiked] = useState(false);
+
+    const router = useRouter();
 
     useEffect(() => {
         const { fid } = building;
@@ -88,7 +91,11 @@ export const HouseOption = ({ building }: Props) => {
                     onClick={() => switchLike()}
                     icon={<HeartOutlined />}
                 />
-                <Button icon={<ArrowRightOutlined />} />
+                <Button
+                    icon={<RightOutlined />}
+                    type='primary'
+                    onClick={() => router.push(`/details?id=${building.fid}`)}
+                />
             </div>
         </div>
     );

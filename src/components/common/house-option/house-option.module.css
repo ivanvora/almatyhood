@@ -10,7 +10,8 @@
     width: 400px;
     display: flex;
     justify-content: space-between;
-    gap:10px
+    gap:10px;
+    cursor:pointer;
 }
 .pic{
     background: url('../../../assets/Rectangle\ 12.png') no-repeat;
